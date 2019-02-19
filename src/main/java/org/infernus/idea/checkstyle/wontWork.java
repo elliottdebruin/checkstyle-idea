@@ -1,1 +1,3 @@
-class notEvenTheSameClassName{}
+class notEvenTheSameClassName{
+	clearly syntax error
+}
