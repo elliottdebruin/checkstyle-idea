@@ -59,6 +59,10 @@ dependencies {
     compile group: 'org.slf4j', name: 'jcl-over-slf4j', version: '1.7.25'
     compile group: 'org.slf4j', name: 'slf4j-log4j12', version: '1.7.25'
 
+    // For access configuration ADT
+    compile group: 'com.puppycrawl.tools', name: 'checkstyle', version: supportedCsVersions.getBaseVersion();
+
+
     csaccessCompileOnly ("com.puppycrawl.tools:checkstyle:${supportedCsVersions.getBaseVersion()}") {
         exclude group: 'commons-logging', module: 'commons-logging';
     }
