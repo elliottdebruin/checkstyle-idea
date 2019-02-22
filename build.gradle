@@ -61,6 +61,7 @@ dependencies {
 
     // For access configuration ADT
     implementation group: 'com.puppycrawl.tools', name: 'checkstyle', version: supportedCsVersions.getBaseVersion();
+    //runtime group: 'com.puppycrawl.tools', name: 'checkstyle', version: supportedCsVersions.getBaseVersion();
 
     csaccessCompileOnly ("com.puppycrawl.tools:checkstyle:${supportedCsVersions.getBaseVersion()}") {
         exclude group: 'commons-logging', module: 'commons-logging';
