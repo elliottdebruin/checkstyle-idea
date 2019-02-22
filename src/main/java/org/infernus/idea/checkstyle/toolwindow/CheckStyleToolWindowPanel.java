@@ -12,6 +12,7 @@ import com.intellij.openapi.fileEditor.FileEditorManager;
 import com.intellij.openapi.fileEditor.TextEditor;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.ComboBox;
+import com.intellij.openapi.util.IconLoader;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.wm.ToolWindow;
 import com.intellij.openapi.wm.ToolWindowManager;
@@ -26,6 +27,7 @@ import org.infernus.idea.checkstyle.csapi.SeverityLevel;
 import org.infernus.idea.checkstyle.exception.CheckStylePluginParseException;
 import org.infernus.idea.checkstyle.exception.CheckstyleToolException;
 import org.infernus.idea.checkstyle.model.ConfigurationLocation;
+import org.infernus.idea.checkstyle.ui.ConfigurationEditorDialogWrapper;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
@@ -61,6 +63,7 @@ public class CheckStyleToolWindowPanel extends JPanel implements ConfigurationLi
 
     private static final String MAIN_ACTION_GROUP = "CheckStylePluginActions";
     private static final String TREE_ACTION_GROUP = "CheckStylePluginTreeActions";
+    private static final String CONFIG_ACTION_GROUP = "CheckStylePluginConfigurationActions";
     private static final String DEFAULT_OVERRIDE = message("plugin.toolwindow.default-file");
 
     private static final Map<Pattern, String> CHECKSTYLE_ERROR_PATTERNS
@@ -125,6 +128,7 @@ public class CheckStyleToolWindowPanel extends JPanel implements ConfigurationLi
                 ActionManager.getInstance().getAction(TREE_ACTION_GROUP);
         final ActionToolbar treeToolbar = ActionManager.getInstance().createActionToolbar(
                 ID_TOOLWINDOW, treeActionGroup, false);
+        
 
         final Box toolBarBox = Box.createHorizontalBox();
         toolBarBox.add(mainToolbar.getComponent());
@@ -164,7 +168,21 @@ public class CheckStyleToolWindowPanel extends JPanel implements ConfigurationLi
         resultsTree.addMouseListener(treeMouseListener);
         resultsTree.addKeyListener(new ToolWindowKeyboardListener());
         resultsTree.setCellRenderer(new ResultTreeRenderer());
-
+        JButton configButton = new JButton(
+            "Configuration Editor",
+            IconLoader.getIcon("/actions/moveToStandardPlace@2x.png"));
+        configButton.setBorder(BorderFactory.createEmptyBorder(10, 20, 10, 20));
+        configButton.addActionListener(new ActionListener(){
+        
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                boolean result = new ConfigurationEditorDialogWrapper().showAndGet();
+                if (result) {
+                  System.out.println("Hello World!");
+                }
+            }
+        });
+                
         progressLabel = new JLabel(" ");
         progressBar = new JProgressBar(JProgressBar.HORIZONTAL);
         progressBar.setMinimum(0);
@@ -172,12 +190,14 @@ public class CheckStyleToolWindowPanel extends JPanel implements ConfigurationLi
         progressBar.setMinimumSize(progressBarSize);
         progressBar.setPreferredSize(progressBarSize);
         progressBar.setMaximumSize(progressBarSize);
-
+        
         progressPanel = new JToolBar(JToolBar.HORIZONTAL);
         progressPanel.add(Box.createHorizontalStrut(4));
         progressPanel.add(new JLabel(message("plugin.toolwindow.override")));
         progressPanel.add(Box.createHorizontalStrut(4));
         progressPanel.add(configurationOverrideCombo);
+        progressPanel.add(Box.createHorizontalStrut(8));
+        progressPanel.add(configButton);
         progressPanel.add(Box.createHorizontalStrut(4));
         progressPanel.addSeparator();
         progressPanel.add(Box.createHorizontalStrut(4));
@@ -186,7 +206,7 @@ public class CheckStyleToolWindowPanel extends JPanel implements ConfigurationLi
         progressPanel.setFloatable(false);
         progressPanel.setBackground(UIManager.getColor("Panel.background"));
         progressPanel.setBorder(null);
-
+        
         final JPanel toolPanel = new JPanel(new BorderLayout());
         toolPanel.add(new JBScrollPane(resultsTree), BorderLayout.CENTER);
         toolPanel.add(progressPanel, BorderLayout.NORTH);
