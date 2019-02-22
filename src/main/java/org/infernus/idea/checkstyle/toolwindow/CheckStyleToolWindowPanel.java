@@ -190,7 +190,7 @@ public class CheckStyleToolWindowPanel extends JPanel implements ConfigurationLi
         progressBar.setMinimumSize(progressBarSize);
         progressBar.setPreferredSize(progressBarSize);
         progressBar.setMaximumSize(progressBarSize);
-        
+
         progressPanel = new JToolBar(JToolBar.HORIZONTAL);
         progressPanel.add(Box.createHorizontalStrut(4));
         progressPanel.add(new JLabel(message("plugin.toolwindow.override")));
@@ -206,7 +206,7 @@ public class CheckStyleToolWindowPanel extends JPanel implements ConfigurationLi
         progressPanel.setFloatable(false);
         progressPanel.setBackground(UIManager.getColor("Panel.background"));
         progressPanel.setBorder(null);
-        
+
         final JPanel toolPanel = new JPanel(new BorderLayout());
         toolPanel.add(new JBScrollPane(resultsTree), BorderLayout.CENTER);
         toolPanel.add(progressPanel, BorderLayout.NORTH);
