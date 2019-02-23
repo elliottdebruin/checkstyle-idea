@@ -74,6 +74,7 @@ public class CheckStyleToolWindowPanel extends JPanel implements ConfigurationLi
     private final ToolWindow toolWindow;
     private final ComboBox configurationOverrideCombo = new ComboBox();
     private final DefaultComboBoxModel configurationOverrideModel = new DefaultComboBoxModel();
+    private final ConfigurationEditorDialogWrapper configEditor = new ConfigurationEditorDialogWrapper();
 
     private boolean displayingErrors = true;
     private boolean displayingWarnings = true;
@@ -173,13 +174,9 @@ public class CheckStyleToolWindowPanel extends JPanel implements ConfigurationLi
             IconLoader.getIcon("/actions/moveToStandardPlace@2x.png"));
         configButton.setBorder(BorderFactory.createEmptyBorder(10, 20, 10, 20));
         configButton.addActionListener(new ActionListener(){
-        
             @Override
             public void actionPerformed(ActionEvent e) {
-                boolean result = new ConfigurationEditorDialogWrapper().showAndGet();
-                if (result) {
-                  System.out.println("Hello World!");
-                }
+                configEditor.setVisible(true);
             }
         });
                 
