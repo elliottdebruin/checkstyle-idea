@@ -27,7 +27,7 @@ import org.infernus.idea.checkstyle.csapi.SeverityLevel;
 import org.infernus.idea.checkstyle.exception.CheckStylePluginParseException;
 import org.infernus.idea.checkstyle.exception.CheckstyleToolException;
 import org.infernus.idea.checkstyle.model.ConfigurationLocation;
-import org.infernus.idea.checkstyle.ui.ConfigurationEditorDialogWrapper;
+import org.infernus.idea.checkstyle.ui.ConfigurationEditorWindow;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
@@ -74,7 +74,7 @@ public class CheckStyleToolWindowPanel extends JPanel implements ConfigurationLi
     private final ToolWindow toolWindow;
     private final ComboBox configurationOverrideCombo = new ComboBox();
     private final DefaultComboBoxModel configurationOverrideModel = new DefaultComboBoxModel();
-    private final ConfigurationEditorDialogWrapper configEditor = new ConfigurationEditorDialogWrapper();
+    private final ConfigurationEditorWindow configEditor = new ConfigurationEditorWindow();
 
     private boolean displayingErrors = true;
     private boolean displayingWarnings = true;
