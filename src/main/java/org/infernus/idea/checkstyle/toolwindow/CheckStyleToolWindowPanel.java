@@ -63,7 +63,6 @@ public class CheckStyleToolWindowPanel extends JPanel implements ConfigurationLi
 
     private static final String MAIN_ACTION_GROUP = "CheckStylePluginActions";
     private static final String TREE_ACTION_GROUP = "CheckStylePluginTreeActions";
-    private static final String CONFIG_ACTION_GROUP = "CheckStylePluginConfigurationActions";
     private static final String DEFAULT_OVERRIDE = message("plugin.toolwindow.default-file");
 
     private static final Map<Pattern, String> CHECKSTYLE_ERROR_PATTERNS
@@ -129,7 +128,6 @@ public class CheckStyleToolWindowPanel extends JPanel implements ConfigurationLi
                 ActionManager.getInstance().getAction(TREE_ACTION_GROUP);
         final ActionToolbar treeToolbar = ActionManager.getInstance().createActionToolbar(
                 ID_TOOLWINDOW, treeActionGroup, false);
-        
 
         final Box toolBarBox = Box.createHorizontalBox();
         toolBarBox.add(mainToolbar.getComponent());
@@ -169,6 +167,7 @@ public class CheckStyleToolWindowPanel extends JPanel implements ConfigurationLi
         resultsTree.addMouseListener(treeMouseListener);
         resultsTree.addKeyListener(new ToolWindowKeyboardListener());
         resultsTree.setCellRenderer(new ResultTreeRenderer());
+
         JButton configButton = new JButton(
             "Configuration Editor",
             IconLoader.getIcon("/actions/moveToStandardPlace@2x.png"));
