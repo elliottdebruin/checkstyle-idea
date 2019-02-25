@@ -1,0 +1,16 @@
+Goals from last week:
+  * Finish new proposal
+  * Assign responsibilities
+  * Begin implementation
+
+Progress over the week:
+  * Finished new proposal
+  * Assigned responsibilities (GUI "View" module for me)
+  * Built Configuration Editor Window (layout, import/preview/generate buttons,
+      event listener registration)
+
+Goals for next week:
+  * Finish building core View features (rule attributes, XML preview, and import config dialogs)
+  * Integrate View with Controller
+  * Add JavaDoc to public and protected methods
+  * Begin gathering user feedback on GUI
