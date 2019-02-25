@@ -58,7 +58,7 @@ public class ConfigurationEditorWindow extends JFrame {
     super("Configuration Editor");
     setIconImage(iconToImage(IconLoader.getIcon("/org/infernus/idea/checkstyle/images/checkstyle32.png")));
     createCenterPanel();
-    setMinimumSize(new Dimension(950, 600));
+    setMinimumSize(new Dimension(1500, 900));
     pack();
     setLocationByPlatform(true);
     // setResizable(false);
