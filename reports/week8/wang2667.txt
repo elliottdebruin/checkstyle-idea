@@ -1,0 +1,10 @@
+Goal:
+	Finish XML parser and writer for the project
+
+Progress:
+	XML ADT, XML reader and writer were done, awaiting PR to be approved.
+
+Next Goal:
+	Build and test actual GUI
+	Build and test Model
+	Build and test Controller
