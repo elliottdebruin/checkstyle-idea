@@ -7,7 +7,12 @@ import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.Image;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
@@ -16,23 +21,57 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
+import javax.swing.ListSelectionModel;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 
 import com.intellij.openapi.util.IconLoader;
 import com.intellij.ui.JBSplitter;
 
+enum ConfigurationListeners {
+  IMPORT_BUTTON_LISTENER, PREVIEW_BUTTON_LISTENER, GENERATE_BUTTON_LISTENER, CATEGORY_SELECT_LISTENER,
+  VISIBLE_RULES_SELECT_LISTENER, ACTIVE_RULES_SELECT_LISTENER;
+}
+
 public class ConfigurationEditorWindow extends JFrame {
   private static final long serialVersionUID = 17L;
+
+  private final JTextField configNameField = new JTextField(20);
+  private final JLabel categoryLabel = new JLabel();
+  private final JList<String> categoryList = new JList<>();
+  private final JList<String> visibleRulesList = new JList<>();
+  private final JList<String> activeRulesList = new JList<>();
+
+  private final Collection<ActionListener> importBtnListeners = new ArrayList<>();
+  private final Collection<ActionListener> previewBtnListeners = new ArrayList<>();
+  private final Collection<ActionListener> generateBtnListeners = new ArrayList<>();
+
+  private final Collection<ListSelectionListener> categorySelectListeners = new ArrayList<>();
+  private final Collection<ListSelectionListener> visibleRulesSelectListeners = new ArrayList<>();
+  private final Collection<ListSelectionListener> activeRulesSelectListeners = new ArrayList<>();
 
   public ConfigurationEditorWindow() {
     super("Configuration Editor");
     setIconImage(iconToImage(IconLoader.getIcon("/org/infernus/idea/checkstyle/images/checkstyle32.png")));
     createCenterPanel();
+    setMinimumSize(new Dimension(950, 600));
     pack();
     setLocationByPlatform(true);
     // setResizable(false);
+
+    setCategories(Arrays.asList("Annotation", "Blocks", "Coding", "Design", "Header", "Indentation", "Javadoc",
+        "Metrics", "Modifier", "Naming", "Sizes", "Whitespace", "Other"));
+    addSelectionListener(new ListSelectionListener() {
+      @Override
+      public void valueChanged(ListSelectionEvent e) {
+        String category = categoryList.getSelectedValue();
+        setVisibleRules(category, Arrays.asList("Rule 1", "Rule 2"));
+      }
+    }, ConfigurationListeners.CATEGORY_SELECT_LISTENER);
   }
 
   protected void createCenterPanel() {
@@ -58,6 +97,12 @@ public class ConfigurationEditorWindow extends JFrame {
     JPanel topRow = new JPanel(new FlowLayout(FlowLayout.LEADING));
 
     JButton importBtn = new JButton("Import");
+    importBtn.addActionListener(new ActionListener() {
+      @Override
+      public void actionPerformed(ActionEvent e) {
+        importBtnListeners.forEach(ibl -> ibl.actionPerformed(e));
+      }
+    });
     topRow.add(importBtn);
 
     topRow.setComponentOrientation(ComponentOrientation.LEFT_TO_RIGHT);
@@ -70,13 +115,26 @@ public class ConfigurationEditorWindow extends JFrame {
     bottomRow.add(Box.createHorizontalStrut(4));
     bottomRow.add(new JLabel("Configuration Name:"));
     bottomRow.add(Box.createHorizontalStrut(4));
-    JTextField nameField = new JTextField(20);
-    bottomRow.add(nameField);
+    bottomRow.add(this.configNameField);
     bottomRow.add(Box.createHorizontalStrut(4));
+
     JButton previewBtn = new JButton("Preview");
+    previewBtn.addActionListener(new ActionListener(){
+      @Override
+      public void actionPerformed(ActionEvent e) {
+        previewBtnListeners.forEach(pbl -> pbl.actionPerformed(e));
+      }
+    });
     bottomRow.add(previewBtn);
     bottomRow.add(Box.createHorizontalStrut(4));
+
     JButton generateBtn = new JButton("Generate");
+    generateBtn.addActionListener(new ActionListener(){
+      @Override
+      public void actionPerformed(ActionEvent e) {
+        generateBtnListeners.forEach(gbl -> gbl.actionPerformed(e));
+      }
+    });
     bottomRow.add(generateBtn);
     bottomRow.add(Box.createHorizontalGlue());
 
@@ -87,10 +145,19 @@ public class ConfigurationEditorWindow extends JFrame {
   protected JPanel createSelectCategoryPanel() {
     JPanel panel = new JPanel(new BorderLayout());
 
-    JScrollPane scrollPane = new JScrollPane();
+    this.categoryList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+    this.categoryList.setLayoutOrientation(JList.VERTICAL);
+    this.categoryList.addListSelectionListener(new ListSelectionListener() {
+      @Override
+      public void valueChanged(ListSelectionEvent e) {
+        categorySelectListeners.forEach(csl -> csl.valueChanged(e));
+      }
+    });
+
+    JScrollPane scrollPane = new JScrollPane(this.categoryList);
     scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
-    scrollPane.setMinimumSize(new Dimension(100, 800));
-    scrollPane.setPreferredSize(new Dimension(100, 800));
+    scrollPane.setMinimumSize(new Dimension(200, 400));
+    scrollPane.setPreferredSize(new Dimension(200, 800));
 
     panel.add(scrollPane, BorderLayout.CENTER);
     panel.setBorder(BorderFactory.createEmptyBorder(15, 15, 15, 15));
@@ -99,12 +166,30 @@ public class ConfigurationEditorWindow extends JFrame {
 
   protected JPanel createSelectRulesPanel() {
     JPanel panel = new JPanel(new BorderLayout());
+    JPanel topRow = new JPanel(new FlowLayout(FlowLayout.LEADING));
 
-    JScrollPane scrollPane = new JScrollPane();
+    Font font = this.categoryLabel.getFont();
+    this.categoryLabel.setFont(new Font(font.getName(), Font.BOLD, 48));
+
+    topRow.add(Box.createHorizontalStrut(4));
+    topRow.add(this.categoryLabel);
+    topRow.add(Box.createHorizontalStrut(4));
+
+    this.visibleRulesList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+    this.visibleRulesList.setLayoutOrientation(JList.VERTICAL);
+    this.visibleRulesList.addListSelectionListener(new ListSelectionListener() {
+      @Override
+      public void valueChanged(ListSelectionEvent e) {
+        visibleRulesSelectListeners.forEach(vrsl -> vrsl.valueChanged(e));
+      }
+    });
+
+    JScrollPane scrollPane = new JScrollPane(this.visibleRulesList);
     scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
-    scrollPane.setMinimumSize(new Dimension(400, 400));
-    scrollPane.setPreferredSize(new Dimension(400, 400));
+    scrollPane.setMinimumSize(new Dimension(800, 200));
+    scrollPane.setPreferredSize(new Dimension(800, 400));
 
+    panel.add(topRow, BorderLayout.NORTH);
     panel.add(scrollPane, BorderLayout.CENTER);
     panel.setBorder(BorderFactory.createEmptyBorder(15, 15, 15, 15));
     return panel;
@@ -113,20 +198,29 @@ public class ConfigurationEditorWindow extends JFrame {
   protected JPanel createActiveRulesPanel() {
     JPanel bottomPanel = new JPanel(new BorderLayout());
     JPanel topRow = new JPanel(new FlowLayout(FlowLayout.LEADING));
-    
+
     JLabel activeLabel = new JLabel("Active Rules");
     Font font = activeLabel.getFont();
     activeLabel.setFont(new Font(font.getName(), Font.BOLD, 48));
-    
+
     topRow.add(Box.createHorizontalStrut(4));
     topRow.add(activeLabel);
     topRow.add(Box.createHorizontalStrut(4));
 
-    JScrollPane scrollPane = new JScrollPane();
+    this.activeRulesList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+    this.activeRulesList.setLayoutOrientation(JList.VERTICAL);
+    this.activeRulesList.addListSelectionListener(new ListSelectionListener() {
+      @Override
+      public void valueChanged(ListSelectionEvent e) {
+        activeRulesSelectListeners.forEach(arsl -> arsl.valueChanged(e));
+      }
+    });
+
+    JScrollPane scrollPane = new JScrollPane(this.activeRulesList);
     scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
-    scrollPane.setMinimumSize(new Dimension(400, 400));
-    scrollPane.setPreferredSize(new Dimension(400, 400));
-    
+    scrollPane.setMinimumSize(new Dimension(800, 200));
+    scrollPane.setPreferredSize(new Dimension(800, 400));
+
     bottomPanel.add(topRow, BorderLayout.NORTH);
     bottomPanel.add(scrollPane, BorderLayout.CENTER);
     bottomPanel.setBorder(BorderFactory.createEmptyBorder(15, 15, 15, 15));
@@ -142,6 +236,51 @@ public class ConfigurationEditorWindow extends JFrame {
       ico.paintIcon(null, g, 0, 0);
       g.dispose();
       return image;
+    }
+  }
+
+  public void setCategories(Collection<String> categories) {
+    this.categoryList.setListData(categories.toArray(new String[categories.size()]));
+  }
+
+  public void setVisibleRules(String category, Collection<String> rules) {
+    this.categoryLabel.setText(category);
+    this.visibleRulesList.setListData(rules.toArray(new String[rules.size()]));
+  }
+
+  public String getConfigurationName() {
+    return this.configNameField.getText();
+  }
+
+  public void addButtonListener(ActionListener al, ConfigurationListeners button) {
+    switch (button) {
+    case IMPORT_BUTTON_LISTENER:
+      this.importBtnListeners.add(al);
+      break;
+    case PREVIEW_BUTTON_LISTENER:
+      this.previewBtnListeners.add(al);
+      break;
+    case GENERATE_BUTTON_LISTENER:
+      this.generateBtnListeners.add(al);
+      break;
+    default:
+      break;
+    }
+  }
+
+  public void addSelectionListener(ListSelectionListener lsl, ConfigurationListeners selectionList) {
+    switch (selectionList) {
+    case CATEGORY_SELECT_LISTENER:
+      this.categorySelectListeners.add(lsl);
+      break;
+    case VISIBLE_RULES_SELECT_LISTENER:
+      this.visibleRulesSelectListeners.add(lsl);
+      break;
+    case ACTIVE_RULES_SELECT_LISTENER:
+      this.activeRulesSelectListeners.add(lsl);
+      break;
+    default:
+      break;
     }
   }
 }
