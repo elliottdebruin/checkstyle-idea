@@ -15,8 +15,13 @@ public class ConfigWriterTest {
   private static String easyConfigName = "easy.xml";
   private static String easyConfigPreviewName = "easyPreview.xml";
   private static String complicatedConfigName = "isIsComplicated.xml";
+  private static String complicatedConfigPreviewName = "complicatedPreview.xml";
   private static String[] fileList = new String[]{
-          easyConfigName, complicatedConfigName, easyConfigPreviewName};
+          easyConfigName,
+          complicatedConfigName,
+          easyConfigPreviewName,
+          complicatedConfigPreviewName
+  };
 
   @Before
   public void setUp() {
@@ -199,5 +204,93 @@ public class ConfigWriterTest {
             read.getMessages().get("regexp.filepath.mismatch"));
 
     assertEquals("RegexpMultiline", read.getChildren()[0].getName());
+  }
+
+  @Test
+  public void ConfigWriterXMLPreviewComplicatedXMLTest() throws Exception {
+    XMLConfig SuppressWarningsFilter = new XMLConfig("SuppressWarningsFilter");
+    XMLConfig BeforeExecutionExclusionFileFilter = new XMLConfig("BeforeExecutionExclusionFileFilter");
+    XMLConfig SuppressWarnings = new XMLConfig("SuppressWarnings");
+    XMLConfig TreeWalker = new XMLConfig("TreeWalker");
+    XMLConfig AnnotationLocation = new XMLConfig("AnnotationLocation");
+
+    this.plainConfig.addAttribute("cacheFile", "${checkstyle.cache.file}");
+
+    // SuppressWarningsFilter
+    this.plainConfig.addChild(SuppressWarningsFilter);
+
+    // BeforeExecutionExclusionFileFilter
+    BeforeExecutionExclusionFileFilter.addAttribute("fileNamePattern", "module\\-info\\.java$");
+    this.plainConfig.addChild(BeforeExecutionExclusionFileFilter);
+
+    // SuppressWarnings
+    SuppressWarnings.addAttribute("format", "^((?!unchecked|deprecation|rawtypes|resource).)*$");
+    SuppressWarnings.addMessage("regexp.filepath.mismatch",
+            "Only java files should be located in the ''src/*/java'' folders.");
+    this.plainConfig.addChild(SuppressWarnings);
+
+    // AnnotationLocation
+    AnnotationLocation.addAttribute("tokens", "PARAMETER_DEF");
+    AnnotationLocation.addAttribute("allowSamelineMultipleAnnotations", "true");
+    TreeWalker.addChild(AnnotationLocation);
+
+    // TreeWalker
+    this.plainConfig.addChild(TreeWalker);
+
+    String previewString = ConfigWriter.XMLPreview(this.plainConfig);
+
+    PrintWriter out = new PrintWriter(complicatedConfigPreviewName);
+
+    out.println(previewString);
+    out.flush();
+    out.close();
+
+    XMLConfig read = ConfigReader.readConfig(complicatedConfigPreviewName);
+
+    assertEquals("Checker", read.getName());
+    assertEquals(1, read.getAttributeNames().length);
+    assertEquals(4, read.getChildren().length);
+    assertEquals(0, read.getMessages().size());
+
+    assertEquals("${checkstyle.cache.file}", read.getAttribute("cacheFile"));
+
+    XMLConfig[] child = read.getChildren();
+    assertEquals(4, child.length);
+
+    for (int i = 0; i < child.length; i++) {
+      if (child[i].getName().equals("SuppressWarningsFilter")) {
+        assertEquals(0, child[i].getAttributeNames().length);
+        assertEquals(0, child[i].getChildren().length);
+        assertEquals(0, child[i].getMessages().size());
+      } else if (child[i].getName().equals("BeforeExecutionExclusionFileFilter")) {
+        assertEquals(1, child[i].getAttributeNames().length);
+        assertEquals(0, child[i].getChildren().length);
+        assertEquals(0, child[i].getMessages().size());
+
+        assertEquals("module\\-info\\.java$", child[i].getAttribute("fileNamePattern"));
+      } else if (child[i].getName().equals("SuppressWarnings")) {
+        assertEquals(1, child[i].getAttributeNames().length);
+        assertEquals(0, child[i].getChildren().length);
+        assertEquals(1, child[i].getMessages().size());
+
+        assertEquals("^((?!unchecked|deprecation|rawtypes|resource).)*$", child[i].getAttribute("format"));
+        assertEquals("Only java files should be located in the ''src/*/java'' folders.",
+                child[i].getMessages().get("regexp.filepath.mismatch"));
+      } else if (child[i].getName().equals("TreeWalker")) {
+        assertEquals(0, child[i].getAttributeNames().length);
+        assertEquals(1, child[i].getChildren().length);
+        assertEquals(0, child[i].getMessages().size());
+
+        XMLConfig grandChild = child[i].getChildren()[0];
+        assertEquals(2, grandChild.getAttributeNames().length);
+        assertEquals(0, grandChild.getChildren().length);
+        assertEquals(0, grandChild.getMessages().size());
+
+        assertEquals("PARAMETER_DEF", grandChild.getAttribute("tokens"));
+        assertEquals("true", grandChild.getAttribute("allowSamelineMultipleAnnotations"));
+      } else {
+        assertTrue("unexpected child config " + child[i].getName(), false);
+      }
+    }
   }
 }
