@@ -46,7 +46,7 @@ Properties' button.
 To generate a new CheckStyle file click on the 'Generate Configuration' button, to the right of the dropdown menu used 
 to select the configuration file to run. Once selected a window will be displayed that looks like the image below:
 
-![GUI mockup](reports/GUImockup.jpeg)
+![GUI mockup](reports/CSIGUI.png)
 
 In the top left of the larger window there is an 'Import' button, which when clicked will allow the user to import an existing 
 CheckStyle configuration file to the Configuration Generator. To the right of the 'Import' button we have a search bar that allows 
