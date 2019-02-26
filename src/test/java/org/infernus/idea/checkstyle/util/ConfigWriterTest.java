@@ -156,4 +156,11 @@ public class ConfigWriterTest {
       }
     }
   }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void ConfigWriterXMLPreviewTest() throws Exception {
+    XMLConfig notcheck = new XMLConfig("NotChecker");
+
+    ConfigWriter.XMLPreview(notcheck);
+  }
 }

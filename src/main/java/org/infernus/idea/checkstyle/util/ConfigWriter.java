@@ -85,6 +85,20 @@ public class ConfigWriter {
   }
 
   /**
+   * Outputs the String result of the config in XML format
+   * @param config - The configuration to convert to XML String
+   * @return The XML format of config.
+   * @throws IllegalArgumentException - When root module is not Checker
+   */
+  public static String XMLPreview(XMLConfig config) throws IllegalArgumentException {
+    if (!config.getName().equals("Checker")) {
+      throw new IllegalArgumentException("root module not Checker");
+    }
+
+    return "";
+  }
+
+  /**
    * A helper function that converts XMLConfig into correct dom structure.
    * @param dom - The XMLConfig to convert from.
    * @param doc - The tool to generate Element
