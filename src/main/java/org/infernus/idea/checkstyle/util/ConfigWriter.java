@@ -15,6 +15,7 @@ import javax.xml.transform.stream.StreamResult;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.StringWriter;
 import java.util.Map;
 import java.util.regex.Pattern;
 
@@ -95,7 +96,30 @@ public class ConfigWriter {
       throw new IllegalArgumentException("root module not Checker");
     }
 
-    return "";
+    // make XMLConfig to dom format
+    DocumentBuilderFactory docBuilderFactory = DocumentBuilderFactory.newInstance();
+    DocumentBuilder docBuilder = null;
+
+    try {
+      docBuilder = docBuilderFactory.newDocumentBuilder();
+    } catch (ParserConfigurationException e) {
+      System.out.println(e.getMessage());
+    }
+
+    Document output = docBuilder.newDocument();
+    Element root = deepCopy(config, output);
+
+    output.appendChild(root);
+
+    StringWriter previewWriter = new StringWriter();
+
+    try {
+      XMLOutput(output, new StreamResult(previewWriter));
+    } catch (TransformerException e) {
+      System.out.println(e.getMessage());
+    }
+
+    return previewWriter.getBuffer().toString();
   }
 
   /**
@@ -146,7 +170,7 @@ public class ConfigWriter {
    * @throws TransformerException - When transformer error out
    */
   private static void XMLOutput(Document doc, StreamResult result)
-          throws TransformerException{
+          throws TransformerException {
     TransformerFactory trf = TransformerFactory.newInstance();
     Transformer tr = trf.newTransformer();
 

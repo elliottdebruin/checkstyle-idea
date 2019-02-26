@@ -6,15 +6,17 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.io.File;
+import java.io.PrintWriter;
 
 import static org.junit.Assert.*;
 
 public class ConfigWriterTest {
   private XMLConfig plainConfig;
   private static String easyConfigName = "easy.xml";
+  private static String easyConfigPreviewName = "easyPreview.xml";
   private static String complicatedConfigName = "isIsComplicated.xml";
   private static String[] fileList = new String[]{
-          easyConfigName, complicatedConfigName};
+          easyConfigName, complicatedConfigName, easyConfigPreviewName};
 
   @Before
   public void setUp() {
@@ -159,8 +161,43 @@ public class ConfigWriterTest {
 
   @Test(expected = IllegalArgumentException.class)
   public void ConfigWriterXMLPreviewTest() throws Exception {
-    XMLConfig notcheck = new XMLConfig("NotChecker");
+    XMLConfig notCheck = new XMLConfig("NotChecker");
 
-    ConfigWriter.XMLPreview(notcheck);
+    ConfigWriter.XMLPreview(notCheck);
+  }
+
+  @Test
+  public void ConfigWriterXMLPreviewEasyXMLTest() throws Exception {
+    XMLConfig module1 = new XMLConfig("RegexpMultiline");
+    this.plainConfig.addAttribute("cacheFile", "${checkstyle.cache.file}");
+    this.plainConfig.addAttribute("severity", "error");
+    this.plainConfig.addMessage("regexp.filepath.mismatch",
+            "Only java files should be located in the ''src/*/java'' folders.");
+
+    this.plainConfig.addChild(module1);
+
+    String previewString = ConfigWriter.XMLPreview(this.plainConfig);
+
+    PrintWriter out = new PrintWriter(easyConfigPreviewName);
+
+    out.println(previewString);
+    out.flush();
+    out.close();
+
+    XMLConfig read = ConfigReader.readConfig(easyConfigPreviewName);
+
+    assertEquals("Checker", read.getName());
+
+    assertEquals(2, read.getAttributeNames().length);
+    assertEquals(1, read.getChildren().length);
+    assertEquals(1, read.getMessages().size());
+
+    assertEquals("${checkstyle.cache.file}", read.getAttribute("cacheFile"));
+    assertEquals("error", read.getAttribute("severity"));
+
+    assertEquals("Only java files should be located in the ''src/*/java'' folders.",
+            read.getMessages().get("regexp.filepath.mismatch"));
+
+    assertEquals("RegexpMultiline", read.getChildren()[0].getName());
   }
 }
