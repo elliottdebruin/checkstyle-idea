@@ -61,36 +61,23 @@ public class ConfigWriter {
 
       // output to XML
       try {
-        TransformerFactory trf = TransformerFactory.newInstance();
-        Transformer tr = trf.newTransformer();
-
-        DOMImplementation impl = output.getImplementation();
-        DocumentType doctype = impl.createDocumentType( "doctype",
-                "-//Checkstyle//DTD Checkstyle Configuration 1.3//EN",
-                "https://checkstyle.org/dtds/configuration_1_3.dtd" );
-
-        tr.setOutputProperty(OutputKeys.INDENT, "yes");
-        tr.setOutputProperty(OutputKeys.METHOD, "xml");
-        tr.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "4");
-        // both setup public and system doctype has to be there to make transformer
-        // print !DOCTYPE
-        tr.setOutputProperty(OutputKeys.DOCTYPE_PUBLIC, doctype.getPublicId());
-        tr.setOutputProperty( OutputKeys.DOCTYPE_SYSTEM, doctype.getSystemId());
-
         if (!configFile.exists()) {
           // create file if it is not already exist
           configFile.createNewFile();
         }
 
         FileOutputStream fos = new FileOutputStream(configFile);
-        tr.transform(new DOMSource(output), new StreamResult(fos));
+
+        XMLOutput(output, new StreamResult(fos));
 
         fos.close(); // close the stream so other programs won't be bothered
 
       } catch (TransformerConfigurationException e) {
         System.out.println(e.getMessage());
+        configFile.delete();
       } catch (TransformerException e) {
         System.out.println(e.getMessage());
+        configFile.delete();
       }
     } catch (ParserConfigurationException e) {
       System.out.println(e.getMessage());
@@ -135,5 +122,34 @@ public class ConfigWriter {
     }
 
     return output;
+  }
+
+  /**
+   * Helper function to factor out the output process.
+   * @param doc - The document that contains the XML structure
+   * @param result - The StreamResult for Transformer to write data to.
+   *                 Caller is responsible to close the contained steam.
+   * @throws TransformerException - When transformer error out
+   */
+  private static void XMLOutput(Document doc, StreamResult result)
+          throws TransformerException{
+    TransformerFactory trf = TransformerFactory.newInstance();
+    Transformer tr = trf.newTransformer();
+
+    DOMImplementation impl = doc.getImplementation();
+    DocumentType doctype = impl.createDocumentType( "doctype",
+            "-//Checkstyle//DTD Checkstyle Configuration 1.3//EN",
+            "https://checkstyle.org/dtds/configuration_1_3.dtd" );
+
+    tr.setOutputProperty(OutputKeys.INDENT, "yes");
+    tr.setOutputProperty(OutputKeys.METHOD, "xml");
+    tr.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "4");
+    // both setup public and system doctype has to be there to make transformer
+    // print !DOCTYPE
+    tr.setOutputProperty(OutputKeys.DOCTYPE_PUBLIC, doctype.getPublicId());
+    tr.setOutputProperty( OutputKeys.DOCTYPE_SYSTEM, doctype.getSystemId());
+
+    tr.transform(new DOMSource(doc), result);
+
   }
 }
