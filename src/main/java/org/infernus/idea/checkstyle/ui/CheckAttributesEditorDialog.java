@@ -84,7 +84,9 @@ public class CheckAttributesEditorDialog extends JFrame {
     this.centerPanel.removeAll();
     this.textFields.clear();
     for (String attribute : attributes) {
-      this.centerPanel.add(new JLabel(attribute + ":"));
+      JLabel label = new JLabel(attribute + ":");
+      label.setAlignmentX(RIGHT_ALIGNMENT);
+      this.centerPanel.add(label);
       JTextField textField = new JTextField(20);
       this.textFields.add(textField);
       this.centerPanel.add(textField);

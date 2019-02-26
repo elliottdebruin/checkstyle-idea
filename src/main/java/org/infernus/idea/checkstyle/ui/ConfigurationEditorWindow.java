@@ -7,6 +7,7 @@ import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.Image;
+import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
@@ -175,7 +176,12 @@ public class ConfigurationEditorWindow extends JFrame {
     JPanel topRow = new JPanel(new FlowLayout(FlowLayout.LEADING));
 
     JButton importBtn = new JButton("Import");
-    this.importBtnListeners.forEach(ibl -> importBtn.addActionListener(ibl));
+    importBtn.addActionListener(new ActionListener() {
+      @Override
+      public void actionPerformed(ActionEvent e) {
+        importBtnListeners.forEach(ibl -> ibl.actionPerformed(e));
+      }
+    });
     topRow.add(importBtn);
 
     topRow.setComponentOrientation(ComponentOrientation.LEFT_TO_RIGHT);
@@ -198,12 +204,22 @@ public class ConfigurationEditorWindow extends JFrame {
     bottomRow.add(Box.createHorizontalStrut(4));
 
     JButton previewBtn = new JButton("Preview");
-    this.previewBtnListeners.forEach(pbl -> previewBtn.addActionListener(pbl));
+    previewBtn.addActionListener(new ActionListener() {
+      @Override
+      public void actionPerformed(ActionEvent e) {
+        previewBtnListeners.forEach(pbl -> pbl.actionPerformed(e));
+      }
+    });
     bottomRow.add(previewBtn);
     bottomRow.add(Box.createHorizontalStrut(4));
 
     JButton generateBtn = new JButton("Generate");
-    this.generateBtnListeners.forEach(gbl -> generateBtn.addActionListener(gbl));
+    generateBtn.addActionListener(new ActionListener() {
+      @Override
+      public void actionPerformed(ActionEvent e) {
+        generateBtnListeners.forEach(gbl -> gbl.actionPerformed(e));
+      }
+    });
     bottomRow.add(generateBtn);
     bottomRow.add(Box.createHorizontalGlue());
 
@@ -221,7 +237,12 @@ public class ConfigurationEditorWindow extends JFrame {
 
     this.categoryList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
     this.categoryList.setLayoutOrientation(JList.VERTICAL);
-    this.categorySelectListeners.forEach(csl -> this.categoryList.addListSelectionListener(csl));
+    this.categoryList.addListSelectionListener(new ListSelectionListener(){
+      @Override
+      public void valueChanged(ListSelectionEvent e) {
+        categorySelectListeners.forEach(csl -> csl.valueChanged(e));
+      }
+    });
 
     JScrollPane scrollPane = new JScrollPane(this.categoryList);
     scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
@@ -251,7 +272,12 @@ public class ConfigurationEditorWindow extends JFrame {
 
     this.visibleRulesList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
     this.visibleRulesList.setLayoutOrientation(JList.VERTICAL);
-    this.visibleRulesSelectListeners.forEach(vrsl -> this.visibleRulesList.addListSelectionListener(vrsl));
+    this.visibleRulesList.addListSelectionListener(new ListSelectionListener(){
+      @Override
+      public void valueChanged(ListSelectionEvent e) {
+        visibleRulesSelectListeners.forEach(vrsl -> vrsl.valueChanged(e));
+      }
+    });
 
     JScrollPane scrollPane = new JScrollPane(this.visibleRulesList);
     scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
@@ -283,7 +309,12 @@ public class ConfigurationEditorWindow extends JFrame {
 
     this.activeRulesList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
     this.activeRulesList.setLayoutOrientation(JList.VERTICAL);
-    activeRulesSelectListeners.forEach(arsl -> this.visibleRulesList.addListSelectionListener(arsl));
+    this.activeRulesList.addListSelectionListener(new ListSelectionListener(){
+      @Override
+      public void valueChanged(ListSelectionEvent e) {
+        activeRulesSelectListeners.forEach(arsl -> arsl.valueChanged(e));
+      }
+    });
 
     JScrollPane scrollPane = new JScrollPane(this.activeRulesList);
     scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
