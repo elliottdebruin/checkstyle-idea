@@ -1,0 +1,34 @@
+Team Status Report Week 7
+
+Plans and Goals from Previous Week:
+* Build the XML configuration file generator
+* Build the XML file reader
+* Build an ADT to represent XML configuration files
+* Create the base for our GUI
+  * A window that is displayed when a given button in the IDE is clicked and a
+    button to generate a blank configuration file
+
+Progress Report:
+* Built XMLConfigReader and XMLConfigWriter
+* Built ConfigRule and XMLConfig ADT's
+* Built GUI prototype for Configuration Editor Window and Attributes Editor Dialog
+
+Plans and Goals for the Week:
+* Build Custom and Default Rule Provider
+  * responsible for getting rules from 3rd party JARs using JavaBean reflection
+    and converting them to our ConfigRule ADT
+* Finish View (Configuration Selector Dialog, XML Preview Dialog)
+* Begin building Controller (and integrate with View)
+
+Agenda for Weekly Meeting:
+* Questions for Manager:
+  * Given one of our team members dropped out last week, how best to cut scope?
+  * What is the minimum requirement (metric) for success on this project (by Week 10)?
+  * Have we adressed the feedback from the previous week well enough?
+* Questions for Customer:
+  * Does our GUI prototype seem intuitive?
+    * How to improve GUI experience
+  * What features do we not need to have?
+    * Possible features: XML Preview, 3rd Party rule support, support for multiple
+      configurations, attribute type validation in the GUI, Filter/FileFilter/AuditListener
+      support, optional parameters (like "Id", "Severity", "Message")
