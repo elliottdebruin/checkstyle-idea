@@ -8,6 +8,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Map.Entry;
 import java.util.stream.Collectors;
 
 import javax.swing.BorderFactory;
@@ -21,14 +22,33 @@ import javax.swing.SwingConstants;
 
 import com.intellij.openapi.util.IconLoader;
 
+import org.infernus.idea.checkstyle.model.ConfigRule;
+
+/**
+ * This class represents the Attributes Editor Dialog that displays the
+ * attributes associated with a given CheckStyle rule and allows the user to set
+ * them.
+ */
 public class CheckAttributesEditorDialog extends JFrame {
   private static final long serialVersionUID = 13L;
 
+  /**
+   * The center panel that displays attribute names and values
+   */
   private final JPanel centerPanel = new JPanel();
-
+  /**
+   * The text fields associated with the values of the attributes
+   */
   private final Collection<JTextField> textFields = new ArrayList<>();
+  /**
+   * The listeners that have been registered with the "OK" button
+   */
   private final Collection<AttributeSubmissionListener> submissionListeners = new ArrayList<>();
 
+  /**
+   * Creates the JFrame, sets the icon image and preferred size, and utilized
+   * createWindowContent() to populate the window content.
+   */
   public CheckAttributesEditorDialog() {
     super();
     setIconImage(ConfigurationEditorWindow
@@ -37,7 +57,8 @@ public class CheckAttributesEditorDialog extends JFrame {
     setLocationByPlatform(true);
     setMinimumSize(new Dimension(600, 400));
 
-    addSubmitListener(new AttributeSubmissionListener(){
+    // TODO: Remove the code below
+    addSubmitListener(new AttributeSubmissionListener() {
       @Override
       public void actionPerformed(String... values) {
         for (String value : values) {
@@ -64,12 +85,8 @@ public class CheckAttributesEditorDialog extends JFrame {
     okBtn.addActionListener(new ActionListener() {
       @Override
       public void actionPerformed(ActionEvent e) {
-        submissionListeners.forEach(sl -> sl.actionPerformed(
-          textFields.stream()
-            .map(tf -> tf.getText())
-            .collect(Collectors.toList())
-            .toArray(new String[textFields.size()])
-        ));
+        submissionListeners.forEach(sl -> sl.actionPerformed(textFields.stream().map(tf -> tf.getText())
+            .collect(Collectors.toList()).toArray(new String[textFields.size()])));
         setVisible(false);
       }
     });
@@ -79,14 +96,15 @@ public class CheckAttributesEditorDialog extends JFrame {
     return bottomRow;
   }
 
-  public void displayForCheck(String checkName, Collection<String> attributes) {
-    setTitle(checkName + " Attributes");
+  public void displayForCheck(ConfigRule rule) {
+    setTitle("Attributes Editor");
 
     this.centerPanel.removeAll();
     this.textFields.clear();
-    for (String attribute : attributes) {
-      JLabel label = new JLabel(attribute + ": ");
+    for (Entry<String, String> entry : rule.getParameters().entrySet()) {
+      JLabel label = new JLabel(entry.getKey() + ": ");
       label.setHorizontalAlignment(SwingConstants.RIGHT);
+      label.setToolTipText(entry.getValue());
       this.centerPanel.add(label);
       JTextField textField = new JTextField(20);
       this.textFields.add(textField);

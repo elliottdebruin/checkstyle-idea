@@ -9,6 +9,8 @@ import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseMotionListener;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -31,6 +33,8 @@ import javax.swing.event.ListSelectionListener;
 
 import com.intellij.openapi.util.IconLoader;
 import com.intellij.ui.JBSplitter;
+
+import org.infernus.idea.checkstyle.model.ConfigRule;
 
 /**
  * This enum represents the set of all listener types that can be added to the
@@ -72,12 +76,12 @@ public class ConfigurationEditorWindow extends JFrame {
    * The list of selectable rules in the "Visible Rules" panel. These should be
    * rules that are associated with the currently-selected category.
    */
-  private final JList<String> visibleRulesList = new JList<>();
+  private final JList<ConfigRule> visibleRulesList = new JList<>();
   /**
    * The list of selectable rules in the "Active Rules panel". These are rules
    * attached to the current configuration state.
    */
-  private final JList<String> activeRulesList = new JList<>();
+  private final JList<ConfigRule> activeRulesList = new JList<>();
 
   /**
    * All of the listeners that have been registered with the "Import" button.
@@ -129,13 +133,14 @@ public class ConfigurationEditorWindow extends JFrame {
     // TODO: Remove the code below this line, it is only for demo purposes.
     setCategories(Arrays.asList("Annotation", "Blocks", "Coding", "Design", "Header", "Indentation", "Javadoc",
         "Metrics", "Modifier", "Naming", "Sizes", "Whitespace", "Other"));
-    setVisibleRules("Annotation", Arrays.asList("AnnotationLocation", "AnnotationOnSameLine", "AnnotationUseStyle",
-        "MissingDeprecated", "MissingOverride", "PackageAnnotation", "SuppressWarnings"));
-    setActiveRules(Arrays.asList("AnnotationUseStyle", "ModifierOrder", "RegexpMultiline"));
+    setVisibleRules("Annotation", ConfigRule.getVisibleRulesDemo());
+    setActiveRules(ConfigRule.getActiveRulesDemo());
     addSelectionListener(new ListSelectionListener() {
       @Override
       public void valueChanged(ListSelectionEvent e) {
-        attributesEditor.displayForCheck(getSelectedVisibleRule(), Arrays.asList("Money", "Power", "Respect"));
+        ConfigRule rule = getSelectedVisibleRule();
+        rule.getParameters().put("Motha", "Fucka");
+        attributesEditor.displayForCheck(rule);
       }
     }, ConfigurationListeners.VISIBLE_RULES_SELECT_LISTENER);
   }
@@ -237,7 +242,7 @@ public class ConfigurationEditorWindow extends JFrame {
 
     this.categoryList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
     this.categoryList.setLayoutOrientation(JList.VERTICAL);
-    this.categoryList.addListSelectionListener(new ListSelectionListener(){
+    this.categoryList.addListSelectionListener(new ListSelectionListener() {
       @Override
       public void valueChanged(ListSelectionEvent e) {
         categorySelectListeners.forEach(csl -> csl.valueChanged(e));
@@ -272,7 +277,20 @@ public class ConfigurationEditorWindow extends JFrame {
 
     this.visibleRulesList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
     this.visibleRulesList.setLayoutOrientation(JList.VERTICAL);
-    this.visibleRulesList.addListSelectionListener(new ListSelectionListener(){
+    this.visibleRulesList.addMouseMotionListener(new MouseMotionListener() {
+      @Override
+      public void mouseMoved(MouseEvent e) {
+        int index = visibleRulesList.locationToIndex(e.getPoint());
+        if (index > -1) {
+          visibleRulesList.setToolTipText(visibleRulesList.getModel().getElementAt(index).getRuleDescription());
+        }
+      }
+
+      @Override
+      public void mouseDragged(MouseEvent e) {
+      }
+    });
+    this.visibleRulesList.addListSelectionListener(new ListSelectionListener() {
       @Override
       public void valueChanged(ListSelectionEvent e) {
         visibleRulesSelectListeners.forEach(vrsl -> vrsl.valueChanged(e));
@@ -309,7 +327,20 @@ public class ConfigurationEditorWindow extends JFrame {
 
     this.activeRulesList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
     this.activeRulesList.setLayoutOrientation(JList.VERTICAL);
-    this.activeRulesList.addListSelectionListener(new ListSelectionListener(){
+    this.activeRulesList.addMouseMotionListener(new MouseMotionListener() {
+      @Override
+      public void mouseMoved(MouseEvent e) {
+        int index = activeRulesList.locationToIndex(e.getPoint());
+        if (index > -1) {
+          activeRulesList.setToolTipText(activeRulesList.getModel().getElementAt(index).getRuleDescription());
+        }
+      }
+
+      @Override
+      public void mouseDragged(MouseEvent e) {
+      }
+    });
+    this.activeRulesList.addListSelectionListener(new ListSelectionListener() {
       @Override
       public void valueChanged(ListSelectionEvent e) {
         activeRulesSelectListeners.forEach(arsl -> arsl.valueChanged(e));
@@ -369,9 +400,9 @@ public class ConfigurationEditorWindow extends JFrame {
    * @param category The category with which <code>rules</code> are associated
    * @param rules    The rules to display
    */
-  public void setVisibleRules(String category, Collection<String> rules) {
+  public void setVisibleRules(String category, Collection<ConfigRule> rules) {
     this.categoryLabel.setText(category);
-    this.visibleRulesList.setListData(rules.toArray(new String[rules.size()]));
+    this.visibleRulesList.setListData(rules.toArray(new ConfigRule[rules.size()]));
   }
 
   /**
@@ -379,7 +410,7 @@ public class ConfigurationEditorWindow extends JFrame {
    * 
    * @return The currently-selected visible rule
    */
-  public String getSelectedVisibleRule() {
+  public ConfigRule getSelectedVisibleRule() {
     return this.visibleRulesList.getSelectedValue();
   }
 
@@ -388,8 +419,8 @@ public class ConfigurationEditorWindow extends JFrame {
    * 
    * @param rules The rules to display
    */
-  public void setActiveRules(Collection<String> rules) {
-    this.activeRulesList.setListData(rules.toArray(new String[rules.size()]));
+  public void setActiveRules(Collection<ConfigRule> rules) {
+    this.activeRulesList.setListData(rules.toArray(new ConfigRule[rules.size()]));
   }
 
   /**
@@ -397,8 +428,17 @@ public class ConfigurationEditorWindow extends JFrame {
    * 
    * @return The currently-selected active rule
    */
-  public String getSelectedActiveRule() {
+  public ConfigRule getSelectedActiveRule() {
     return this.activeRulesList.getSelectedValue();
+  }
+
+  /**
+   * Sets the text in the Configuration Name text field.
+   * 
+   * @param name The text to set the field to
+   */
+  public void setConfigurationName(String name) {
+    this.configNameField.setText(name);
   }
 
   /**
