@@ -17,6 +17,7 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import javax.swing.SwingConstants;
 
 import com.intellij.openapi.util.IconLoader;
 
@@ -84,8 +85,8 @@ public class CheckAttributesEditorDialog extends JFrame {
     this.centerPanel.removeAll();
     this.textFields.clear();
     for (String attribute : attributes) {
-      JLabel label = new JLabel(attribute + ":");
-      label.setAlignmentX(RIGHT_ALIGNMENT);
+      JLabel label = new JLabel(attribute + ": ");
+      label.setHorizontalAlignment(SwingConstants.RIGHT);
       this.centerPanel.add(label);
       JTextField textField = new JTextField(20);
       this.textFields.add(textField);
