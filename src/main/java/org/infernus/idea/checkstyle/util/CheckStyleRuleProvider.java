@@ -148,7 +148,7 @@ public class CheckStyleRuleProvider {
   /**
    * @return The map containing all default rules, key is the category of the rules
    */
-  public Map<String, List<ConfigRule>> getDefaultRuleByCatetory() {
+  public Map<String, List<ConfigRule>> getDefaultCategorizedRule() {
     return new HashMap<String, List<ConfigRule>>(this.defuleRuleByCategory);
   }
 
@@ -163,7 +163,7 @@ public class CheckStyleRuleProvider {
   /**
    * @return The map containing all the default rules, key is the name of the rule.
    */
-  public Map<String, ConfigRule> getAllConfigRuleByName() {
+  public Map<String, ConfigRule> getDefaultRules() {
     return new HashMap<String, ConfigRule>(this.allDefaultRule);
   }
 
@@ -171,7 +171,7 @@ public class CheckStyleRuleProvider {
    * @param name - The name of the config
    * @return The ConfigRule having the name
    */
-  public ConfigRule getDefaultConfigRuleByName(String name) {
+  public ConfigRule getDefaultRuleByName(String name) {
     return this.allDefaultRule.get(name);
   }
 
