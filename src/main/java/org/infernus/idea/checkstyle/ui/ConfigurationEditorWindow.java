@@ -13,7 +13,6 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionListener;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 
 import javax.swing.BorderFactory;
@@ -35,15 +34,7 @@ import com.intellij.openapi.util.IconLoader;
 import com.intellij.ui.JBSplitter;
 
 import org.infernus.idea.checkstyle.model.ConfigRule;
-
-/**
- * This enum represents the set of all listener types that can be added to the
- * Configuration Editor window.
- */
-enum ConfigurationListeners {
-  IMPORT_BUTTON_LISTENER, PREVIEW_BUTTON_LISTENER, GENERATE_BUTTON_LISTENER, CATEGORY_SELECT_LISTENER,
-  VISIBLE_RULES_SELECT_LISTENER, ACTIVE_RULES_SELECT_LISTENER;
-}
+import org.infernus.idea.checkstyle.util.ConfigurationListeners;
 
 /**
  * This class represents the main Configuration Editor Window. Its layout is
@@ -112,12 +103,6 @@ public class ConfigurationEditorWindow extends JFrame {
   private final Collection<ListSelectionListener> activeRulesSelectListeners = new ArrayList<>();
 
   /**
-   * The Attributes Editor window that displays when a visible or active rule is
-   * selected.
-   */
-  private final CheckAttributesEditorDialog attributesEditor = new CheckAttributesEditorDialog();
-
-  /**
    * The constructor sets the title, icon image, and minimum size of the window.
    * It also employes <code>createWindowContent()</code> to populate the window
    * with content.
@@ -129,20 +114,6 @@ public class ConfigurationEditorWindow extends JFrame {
     setMinimumSize(new Dimension(1500, 900));
     pack();
     setLocationByPlatform(true);
-
-    // TODO: Remove the code below this line, it is only for demo purposes.
-    setCategories(Arrays.asList("Annotation", "Blocks", "Coding", "Design", "Header", "Indentation", "Javadoc",
-        "Metrics", "Modifier", "Naming", "Sizes", "Whitespace", "Other"));
-    setVisibleRules("Annotation", ConfigRule.getVisibleRulesDemo());
-    setActiveRules(ConfigRule.getActiveRulesDemo());
-    addSelectionListener(new ListSelectionListener() {
-      @Override
-      public void valueChanged(ListSelectionEvent e) {
-        ConfigRule rule = getSelectedVisibleRule();
-        rule.getParameters().put("Motha", "Fucka");
-        attributesEditor.displayForCheck(rule);
-      }
-    }, ConfigurationListeners.VISIBLE_RULES_SELECT_LISTENER);
   }
 
   /**

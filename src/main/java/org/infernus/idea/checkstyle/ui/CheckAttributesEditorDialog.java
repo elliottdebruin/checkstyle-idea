@@ -56,16 +56,6 @@ public class CheckAttributesEditorDialog extends JFrame {
     createWindowContent();
     setLocationByPlatform(true);
     setMinimumSize(new Dimension(600, 400));
-
-    // TODO: Remove the code below
-    addSubmitListener(new AttributeSubmissionListener() {
-      @Override
-      public void actionPerformed(String... values) {
-        for (String value : values) {
-          System.out.println(value);
-        }
-      }
-    });
   }
 
   protected void createWindowContent() {

@@ -20,6 +20,8 @@ import com.intellij.psi.PsiFile;
 import com.intellij.ui.components.JBScrollPane;
 import com.intellij.ui.content.Content;
 import com.intellij.ui.treeStructure.Tree;
+
+import org.infernus.idea.checkstyle.CSConfigController;
 import org.infernus.idea.checkstyle.CheckStylePlugin;
 import org.infernus.idea.checkstyle.checker.Problem;
 import org.infernus.idea.checkstyle.config.ConfigurationListener;
@@ -27,7 +29,6 @@ import org.infernus.idea.checkstyle.csapi.SeverityLevel;
 import org.infernus.idea.checkstyle.exception.CheckStylePluginParseException;
 import org.infernus.idea.checkstyle.exception.CheckstyleToolException;
 import org.infernus.idea.checkstyle.model.ConfigurationLocation;
-import org.infernus.idea.checkstyle.ui.ConfigurationEditorWindow;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
@@ -73,7 +74,7 @@ public class CheckStyleToolWindowPanel extends JPanel implements ConfigurationLi
     private final ToolWindow toolWindow;
     private final ComboBox configurationOverrideCombo = new ComboBox();
     private final DefaultComboBoxModel configurationOverrideModel = new DefaultComboBoxModel();
-    private final ConfigurationEditorWindow configEditor = new ConfigurationEditorWindow();
+    private final CSConfigController configController = new CSConfigController();
 
     private boolean displayingErrors = true;
     private boolean displayingWarnings = true;
@@ -175,7 +176,7 @@ public class CheckStyleToolWindowPanel extends JPanel implements ConfigurationLi
         configButton.addActionListener(new ActionListener(){
             @Override
             public void actionPerformed(ActionEvent e) {
-                configEditor.setVisible(true);
+                configController.displayConfigEditor();
             }
         });
                 
