@@ -155,6 +155,7 @@ public class ConfigRule {
     this.ruleName = name;
     this.ruleDescription = description;
     this.parameters = new HashMap<>();
+    this.parameters.put("Motha", "Fucka");
   }
 
   public static Collection<ConfigRule> getVisibleRulesDemo() {

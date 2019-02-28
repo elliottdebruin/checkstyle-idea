@@ -3,6 +3,7 @@ package org.infernus.idea.checkstyle.ui;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -23,6 +24,7 @@ import javax.swing.SwingConstants;
 import com.intellij.openapi.util.IconLoader;
 
 import org.infernus.idea.checkstyle.model.ConfigRule;
+import org.infernus.idea.checkstyle.model.XMLConfig;
 
 /**
  * This class represents the Attributes Editor Dialog that displays the
@@ -36,10 +38,11 @@ public class CheckAttributesEditorDialog extends JFrame {
    * The center panel that displays attribute names and values
    */
   private final JPanel centerPanel = new JPanel();
-  /**
-   * The text fields associated with the values of the attributes
-   */
-  private final Collection<JTextField> textFields = new ArrayList<>();
+  private final JLabel nameLabel = new JLabel();
+  private final JLabel descLabel = new JLabel();
+
+  private XMLConfig currentRule;
+
   /**
    * The listeners that have been registered with the "OK" button
    */
@@ -51,6 +54,7 @@ public class CheckAttributesEditorDialog extends JFrame {
    */
   public CheckAttributesEditorDialog() {
     super();
+    setTitle("Attributes Editor");
     setIconImage(ConfigurationEditorWindow
         .iconToImage(IconLoader.getIcon("/org/infernus/idea/checkstyle/images/checkstyle32.png")));
     createWindowContent();
@@ -62,7 +66,14 @@ public class CheckAttributesEditorDialog extends JFrame {
     this.centerPanel.setLayout(new GridLayout(0, 2));
     this.centerPanel.setBorder(BorderFactory.createEmptyBorder(15, 15, 15, 15));
 
+    JPanel topRow = new JPanel(new BorderLayout());
+    Font font = this.nameLabel.getFont();
+    this.nameLabel.setFont(new Font(font.getName(), Font.BOLD, 48));
+    topRow.add(this.nameLabel, BorderLayout.NORTH);
+    topRow.add(this.descLabel, BorderLayout.SOUTH);
+
     getContentPane().setLayout(new BorderLayout());
+    getContentPane().add(topRow, BorderLayout.NORTH);
     getContentPane().add(this.centerPanel, BorderLayout.CENTER);
     getContentPane().add(createBottomRow(), BorderLayout.SOUTH);
   }
@@ -75,29 +86,59 @@ public class CheckAttributesEditorDialog extends JFrame {
     okBtn.addActionListener(new ActionListener() {
       @Override
       public void actionPerformed(ActionEvent e) {
-        submissionListeners.forEach(sl -> sl.actionPerformed(textFields.stream().map(tf -> tf.getText())
-            .collect(Collectors.toList()).toArray(new String[textFields.size()])));
+        submissionListeners.forEach(sl -> {
+          XMLConfig copy = new XMLConfig(currentRule.getName());
+          for (String attr : currentRule.getAttributeNames()) {
+            copy.addAttribute(attr, currentRule.getAttribute(attr));
+          }
+          sl.actionPerformed(copy);
+        });
         setVisible(false);
       }
     });
     bottomRow.add(okBtn);
+    bottomRow.add(Box.createHorizontalStrut(4));
+    JButton cancelBtn = new JButton("Cancel");
+    cancelBtn.addActionListener(new ActionListener() {
+      @Override
+      public void actionPerformed(ActionEvent e) {
+        setVisible(false);
+      }
+    });
+    bottomRow.add(cancelBtn);
     bottomRow.add(Box.createHorizontalGlue());
 
     return bottomRow;
   }
 
   public void displayForCheck(ConfigRule rule) {
-    setTitle("Attributes Editor");
+    displayForCheck(rule, null);
+  }
+
+  public void displayForCheck(ConfigRule rule, XMLConfig config) {
+    this.currentRule = new XMLConfig(rule.getRuleName());
+    this.nameLabel.setText(rule.getRuleName());
+    this.descLabel.setText(rule.getRuleDescription());
 
     this.centerPanel.removeAll();
-    this.textFields.clear();
     for (Entry<String, String> entry : rule.getParameters().entrySet()) {
-      JLabel label = new JLabel(entry.getKey() + ": ");
+      String attr = entry.getKey();
+
+      JLabel label = new JLabel(attr + ": ");
       label.setHorizontalAlignment(SwingConstants.RIGHT);
       label.setToolTipText(entry.getValue());
       this.centerPanel.add(label);
+
       JTextField textField = new JTextField(20);
-      this.textFields.add(textField);
+      if (config != null) {
+        textField.setText(config.getAttribute(attr));
+      }
+      textField.addActionListener(new ActionListener() {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+          currentRule.addAttribute(attr, textField.getText());
+        }
+      });
       this.centerPanel.add(textField);
     }
 

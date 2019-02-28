@@ -45,7 +45,7 @@ import java.util.Set;
  * */
 public class XMLConfig {
   private String name;
-  private Map<String, String> attrubutes;
+  private Map<String, String> attributes;
   private Map<String, String> msgs;
   private Set<XMLConfig> children;
 
@@ -55,7 +55,7 @@ public class XMLConfig {
    * */
   public XMLConfig(String name) {
     this.name = name;
-    this.attrubutes = new HashMap<String, String>();
+    this.attributes = new HashMap<String, String>();
     this.msgs = new HashMap<String, String>();
     this.children = new HashSet<XMLConfig>();
   }
@@ -67,7 +67,7 @@ public class XMLConfig {
    *                    data structure in XMLConfig
    * */
   public String[] getAttributeNames() {
-    Set<String> set = this.attrubutes.keySet();
+    Set<String> set = this.attributes.keySet();
     return set.toArray(new String[set.size()]);
   }
 
@@ -78,11 +78,11 @@ public class XMLConfig {
    * @throws IllegalArgumentException - if name is not a valid attribute name
    * */
   public String getAttribute(String name) throws IllegalArgumentException {
-    if (!this.attrubutes.containsKey(name)) {
+    if (!this.attributes.containsKey(name)) {
       throw new IllegalArgumentException(name + "is not existing attribute");
     }
 
-    return this.attrubutes.get(name);
+    return this.attributes.get(name);
   }
 
   /**
@@ -141,7 +141,7 @@ public class XMLConfig {
    * @param value - The value of the attribute
    * */
   public void addAttribute(@NotNull String name, @NotNull String value) {
-    this.attrubutes.put(name, value);
+    this.attributes.put(name, value);
   }
 
   /**
@@ -149,7 +149,7 @@ public class XMLConfig {
    * @param name - The name of the attribute to remove
    * */
   public void removeAttribute(String name) {
-    this.attrubutes.remove(name);
+    this.attributes.remove(name);
   }
 
   /**
