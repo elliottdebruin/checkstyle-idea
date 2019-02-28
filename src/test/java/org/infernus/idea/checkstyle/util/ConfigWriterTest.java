@@ -168,7 +168,7 @@ public class ConfigWriterTest {
   public void ConfigWriterXMLPreviewTest() throws Exception {
     XMLConfig notCheck = new XMLConfig("NotChecker");
 
-    ConfigWriter.XMLPreview(notCheck);
+    ConfigWriter.xmlPreview(notCheck);
   }
 
   @Test
@@ -181,7 +181,7 @@ public class ConfigWriterTest {
 
     this.plainConfig.addChild(module1);
 
-    String previewString = ConfigWriter.XMLPreview(this.plainConfig);
+    String previewString = ConfigWriter.xmlPreview(this.plainConfig);
 
     PrintWriter out = new PrintWriter(easyConfigPreviewName);
 
@@ -237,7 +237,7 @@ public class ConfigWriterTest {
     // TreeWalker
     this.plainConfig.addChild(TreeWalker);
 
-    String previewString = ConfigWriter.XMLPreview(this.plainConfig);
+    String previewString = ConfigWriter.xmlPreview(this.plainConfig);
 
     PrintWriter out = new PrintWriter(complicatedConfigPreviewName);
 

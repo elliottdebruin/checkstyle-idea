@@ -69,7 +69,7 @@ public class ConfigWriter {
 
         FileOutputStream fos = new FileOutputStream(configFile);
 
-        XMLOutput(output, new StreamResult(fos));
+        xmlOutput(output, new StreamResult(fos));
 
         fos.close(); // close the stream so other programs won't be bothered
 
@@ -91,7 +91,7 @@ public class ConfigWriter {
    * @return The XML format of config.
    * @throws IllegalArgumentException - When root module is not Checker
    */
-  public static String XMLPreview(XMLConfig config) throws IllegalArgumentException {
+  public static String xmlPreview(XMLConfig config) throws IllegalArgumentException {
     if (!config.getName().equals("Checker")) {
       throw new IllegalArgumentException("root module not Checker");
     }
@@ -114,7 +114,7 @@ public class ConfigWriter {
     StringWriter previewWriter = new StringWriter();
 
     try {
-      XMLOutput(output, new StreamResult(previewWriter));
+      xmlOutput(output, new StreamResult(previewWriter));
     } catch (TransformerException e) {
       System.out.println(e.getMessage());
     }
@@ -169,7 +169,7 @@ public class ConfigWriter {
    *                 Caller is responsible to close the contained steam.
    * @throws TransformerException - When transformer error out
    */
-  private static void XMLOutput(Document doc, StreamResult result)
+  private static void xmlOutput(Document doc, StreamResult result)
           throws TransformerException {
     TransformerFactory trf = TransformerFactory.newInstance();
     Transformer tr = trf.newTransformer();
