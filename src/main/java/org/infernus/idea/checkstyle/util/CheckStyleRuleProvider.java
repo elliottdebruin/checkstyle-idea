@@ -140,6 +140,8 @@ public class CheckStyleRuleProvider {
     id.setType("String");
     id.setDefaultValue("null");
 
+    output.addParameter("id", id);
+
     return output;
   }
 
