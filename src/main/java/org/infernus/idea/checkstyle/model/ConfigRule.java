@@ -1,177 +1,101 @@
 package org.infernus.idea.checkstyle.model;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * An ADT to represent a CheckStyle rule
  */
 public class ConfigRule {
-  /** The name of the rule */
-  private String ruleName;
+    /** The name of the rule */
+    private String ruleName;
+    /** The description of the rule */
+    private String ruleDescription;
+    private String category;
 
-  /** The description of the rule */
-  private String ruleDescription;
+    /**
+     * Stores the available properties of the rule. The key is the
+     * name of the property, and the value will be a ADT that stores
+     * the metadata of the property.
+     */
+    private Map<String, PropertyMetadata> parameters;
 
-  /** The set of parameters */
-  private Map<String, String> parameters;
-
-  /**
-   * Creates a new ConfigRule, with the rule's name as the name of it's java file,
-   * its description as the first multiline comment, and parameters as the name of
-   * the parameters needed to initialize the rule
-   *
-   * @param path the path to the rule's corresponding java file
-   * @throws FileNotFoundException if the given filepath cannot be found
-   */
-  public ConfigRule(String path) throws IOException {
-    String filename = path.substring(path.lastIndexOf('/') + 1);
-    this.ruleName = filename.substring(0, filename.indexOf('.'));
-    this.parameters = parseParameters(path);
-    this.ruleDescription = parseDescription(path);
-  }
-
-  /**
-   * Parses the java file for the given rule and the description of the rule
-   *
-   * @param path the path to the rule's corresponding java file
-   * @return the description of the rule, null if the file does not contain a
-   *         description
-   * @throws FileNotFoundException if the given filepath cannot be found
-   */
-  private String parseDescription(String path) throws IOException {
-    String description = "";
-    File ruleFile = new File(path);
-    Scanner readFile = new Scanner(ruleFile);
-    boolean foundDescription = false;
-    while (readFile.hasNextLine()) {
-      String line = readFile.nextLine();
-      if (!foundDescription) {
-        if (line.contains("/**")) {
-          foundDescription = true;
-        }
-      } else {
-        if (line.contains("*/")) {
-          return description;
-        }
-        if (!line.contains("<")) {
-          description += line + "\n";
-        }
-      }
-    }
-    return null;
-  }
-
-  /**
-   * Parses the java file for the given rule and returns a set of names of
-   * parameters needed to initialize the rule
-   *
-   * @param path the path to the rule's corresponding java file
-   * @return a set of names of parameters needed to initialize the rule
-   * @throws FileNotFoundException if the given filepath cannot be found
-   */
-  private Map<String, String> parseParameters(String path) throws FileNotFoundException {
-    File ruleFile = new File(path);
-    Scanner readFile = new Scanner(ruleFile);
-    Map<String, String> params = new HashMap<>();
-    while (readFile.hasNextLine()) {
-      String line = readFile.nextLine();
-      if (line.contains("public void set")) {
-        String name = line.replaceFirst("public void set", "");
-        System.out.println(name.substring(0, name.lastIndexOf("(")));
-        params.put(name.substring(0, name.lastIndexOf("(")).trim(), "");
-      }
-    }
-    readFile = new Scanner(ruleFile);
-    boolean foundDescription = false;
-    boolean addToMap = false;
-    String description = "";
-
-    while (readFile.hasNextLine()) {
-      String line = readFile.nextLine();
-      if (addToMap) {
-        for (String param : params.keySet()) {
-          if (line.toLowerCase().contains(param.toLowerCase())) {
-            params.put(param, description);
-            description = "";
-            addToMap = false;
-            break;
-          }
-        }
-      }
-      if (!foundDescription) {
-        if (line.contains("/**")) {
-          foundDescription = true;
-        }
-      } else {
-        if (line.contains("*/")) {
-          addToMap = true;
-          foundDescription = false;
-        }
-        if (!line.contains("<")) {
-          description += line + "\n";
-        }
-      }
+    /**
+     * Creates a new ConfigRule, with the rule's name
+     * @param name - The name of this rule
+     */
+    public ConfigRule(String name) {
+        this.ruleName = name;
+        this.parameters = new HashMap<String, PropertyMetadata>();
     }
 
-    return params;
-  }
+    /**
+     * Returns the name of the rule
+     *
+     * @return the name of the rule
+     */
+    public String getRuleName() {
+        return this.ruleName;
+    }
 
-  /**
-   * Returns the name of the rule
-   *
-   * @return the name of the rule
-   */
-  public String getRuleName() {
-    return this.ruleName;
-  }
+    /***
+     * Sets the rule name to name.
+     * @param name - The name to set this ConfigRule to.
+     */
+    public void setRuleName(String name) {
+        this.ruleName = name;
+    }
 
-  /**
-   * Returns the description of what the rule checks for
-   *
-   * @return the description for the rule
-   */
-  public String getRuleDescription() {
-    return this.ruleDescription;
-  }
+    /***
+     * Gets the category name of this rule
+     * @return The category name of this rule
+     */
+    public String getCategory() {
+        return this.category;
+    }
 
-  /**
-   * Returns the set of names of parameters needed to initialize the rule
-   *
-   * @return a set of names of parameters needed to initialize the rule
-   */
-  public Map<String, String> getParameters() {
-    return this.parameters;
-  }
+    /***
+     * Sets the category to category.
+     * @param category - The category name of this rule
+     */
+    public void setCategory(String category) {
+         this.category = category;
+    }
 
-  @Override
-  public String toString() {
-    return this.ruleName;
-  }
+    /**
+     * Returns the description of what the rule checks for
+     *
+     * @return the description for the rule
+     */
+    public String getRuleDescription() {
+        return this.ruleDescription;
+    }
 
-  public ConfigRule(String name, String description) {
-    this.ruleName = name;
-    this.ruleDescription = description;
-    this.parameters = new HashMap<>();
-    this.parameters.put("Motha", "Fucka");
-  }
+    /***
+     * Sets the rule description
+     * @param description - The description of this rule
+     */
+    public void setRuleDescription(String description) {
+        this.ruleDescription = description;
+    }
 
-  public static Collection<ConfigRule> getVisibleRulesDemo() {
-    Collection<ConfigRule> visibleRules = new ArrayList<>();
-    Arrays.asList("AnnotationLocation", "AnnotationOnSameLine", "AnnotationUseStyle", "MissingDeprecated",
-        "MissingOverride", "PackageAnnotation", "SuppressWarnings").forEach(name -> {
-          visibleRules.add(new ConfigRule(name, name));
-        });
-    return visibleRules;
-  }
+    /**
+     * Returns the set of names of parameters needed to initialize
+     * the rule
+     *
+     * @return a set of names of parameters needed to initialize
+     * the rule
+     */
+    public Map<String, PropertyMetadata> getParameters() {
+        return new HashMap<String, PropertyMetadata>(this.parameters);
+    }
 
-  public static Collection<ConfigRule> getActiveRulesDemo() {
-    Collection<ConfigRule> activeRules = new ArrayList<>();
-    Arrays.asList("AnnotationUseStyle", "ModifierOrder", "RegexpMultiline").forEach(name -> {
-      activeRules.add(new ConfigRule(name, name));
-    });
-    return activeRules;
-  }
+    /***
+     * Adds the parameter for this rule
+     * @param name - The name of the properties
+     * @param metadata - The information of the property.
+     */
+    public void addParameter(String name, PropertyMetadata metadata) {
+        this.parameters.put(name, metadata);
+    }
 }
