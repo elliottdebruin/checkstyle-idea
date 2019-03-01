@@ -54,7 +54,7 @@
     </category>
     <category name="Block Checks">
         <module name="AvoidNestedBlocks">
-            <description value="Finds nested blocks, i."/>
+            <description value="Finds nested blocks, i.e. blocks that are used freely in the code."/>
             <property name="allowInSwitchCase" type="Boolean" default="false"/>
         </module>
         <module name="EmptyBlock">
@@ -514,7 +514,7 @@
             <property name="javaStyle" type="Boolean" default="true"/>
         </module>
         <module name="AvoidEscapedUnicodeCharacters">
-            <description value="Restrict using Unicode escapes (e."/>
+            <description value="Restrict using Unicode escapes (e.g. \u221e)."/>
             <property name="allowEscapesForControlCharacters" type="Boolean" default="false"/>
             <property name="allowByTailComment" type="Boolean" default="false"/>
             <property name="allowIfAllCharactersEscaped" type="Boolean" default="false"/>
@@ -850,7 +850,7 @@
             <property name="tokens" type="subset of tokens QUESTION, COLON, EQUAL, NOT_EQUAL, DIV, PLUS, MINUS, STAR, MOD, SR, BSR, GE, GT, SL, LE, LT, BXOR, BOR, LOR, BAND, LAND, LITERAL_INSTANCEOF, TYPE_EXTENSION_AND, ASSIGN, DIV_ASSIGN, PLUS_ASSIGN, MINUS_ASSIGN, STAR_ASSIGN, MOD_ASSIGN, SR_ASSIGN, BSR_ASSIGN, SL_ASSIGN, BXOR_ASSIGN, BOR_ASSIGN, BAND_ASSIGN, METHOD_REF." default="QUESTION, COLON, EQUAL, NOT_EQUAL, DIV, PLUS, MINUS, STAR, MOD, SR, BSR, GE, GT, SL, LE, LT, BXOR, BOR, LOR, BAND, LAND, TYPE_EXTENSION_AND, LITERAL_INSTANCEOF."/>
         </module>
         <module name="ParenPad">
-            <description value="Checks the policy on the padding of parentheses; i."/>
+            <description value="Checks the policy on the padding of parentheses; i.e. whether a space is required after a left parenthesis and before a right parenthesis, or such spaces are forbidden."/>
             <property name="option" type="Pad Policy" default="nospace"/>
             <property name="tokens" type="subset of tokens ANNOTATION, ANNOTATION_FIELD_DEF, CTOR_CALL, CTOR_DEF, DOT, ENUM_CONSTANT_DEF, EXPR, LITERAL_CATCH, LITERAL_DO, LITERAL_FOR, LITERAL_IF, LITERAL_NEW, LITERAL_SWITCH, LITERAL_SYNCHRONIZED, LITERAL_WHILE, METHOD_CALL, METHOD_DEF, QUESTION, RESOURCE_SPECIFICATION, SUPER_CTOR_CALL, LAMBDA." default="ANNOTATION, ANNOTATION_FIELD_DEF, CTOR_CALL, CTOR_DEF, DOT, ENUM_CONSTANT_DEF, EXPR, LITERAL_CATCH, LITERAL_DO, LITERAL_FOR, LITERAL_IF, LITERAL_NEW, LITERAL_SWITCH, LITERAL_SYNCHRONIZED, LITERAL_WHILE, METHOD_CALL, METHOD_DEF, QUESTION, RESOURCE_SPECIFICATION, SUPER_CTOR_CALL, LAMBDA."/>
         </module>

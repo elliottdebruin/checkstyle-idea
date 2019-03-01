@@ -10,6 +10,7 @@ import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
@@ -90,17 +91,17 @@ public class ConfigurationEditorWindow extends JFrame {
    * All of the listeners that have been registered with the list in the
    * "Category" panel
    */
-  private final Collection<ListSelectionListener> categorySelectListeners = new ArrayList<>();
+  private final Collection<MouseListener> categorySelectListeners = new ArrayList<>();
   /**
    * All of the listeners that have been registered with the list in the "Visible
    * Rules" panel
    */
-  private final Collection<ListSelectionListener> visibleRulesSelectListeners = new ArrayList<>();
+  private final Collection<MouseListener> visibleRulesSelectListeners = new ArrayList<>();
   /**
    * All of the listeners that have been registered with the list in the "Active
    * Rules" panel
    */
-  private final Collection<ListSelectionListener> activeRulesSelectListeners = new ArrayList<>();
+  private final Collection<MouseListener> activeRulesSelectListeners = new ArrayList<>();
 
   /**
    * The constructor sets the title, icon image, and minimum size of the window.
@@ -213,10 +214,26 @@ public class ConfigurationEditorWindow extends JFrame {
 
     this.categoryList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
     this.categoryList.setLayoutOrientation(JList.VERTICAL);
-    this.categoryList.addListSelectionListener(new ListSelectionListener() {
+    this.categoryList.addMouseListener(new MouseListener(){
       @Override
-      public void valueChanged(ListSelectionEvent e) {
-        categorySelectListeners.forEach(csl -> csl.valueChanged(e));
+      public void mouseReleased(MouseEvent e) {
+      }
+    
+      @Override
+      public void mousePressed(MouseEvent e) {
+      }
+    
+      @Override
+      public void mouseExited(MouseEvent e) {
+      }
+    
+      @Override
+      public void mouseEntered(MouseEvent e) {
+      }
+    
+      @Override
+      public void mouseClicked(MouseEvent e) {
+        categorySelectListeners.forEach(csl -> csl.mouseClicked(e));
       }
     });
 
@@ -254,6 +271,8 @@ public class ConfigurationEditorWindow extends JFrame {
         int index = visibleRulesList.locationToIndex(e.getPoint());
         if (index > -1) {
           visibleRulesList.setToolTipText(visibleRulesList.getModel().getElementAt(index).getRuleDescription());
+        } else {
+          visibleRulesList.setToolTipText("");
         }
       }
 
@@ -261,10 +280,26 @@ public class ConfigurationEditorWindow extends JFrame {
       public void mouseDragged(MouseEvent e) {
       }
     });
-    this.visibleRulesList.addListSelectionListener(new ListSelectionListener() {
+    this.visibleRulesList.addMouseListener(new MouseListener(){
       @Override
-      public void valueChanged(ListSelectionEvent e) {
-        visibleRulesSelectListeners.forEach(vrsl -> vrsl.valueChanged(e));
+      public void mouseReleased(MouseEvent e) {
+      }
+    
+      @Override
+      public void mousePressed(MouseEvent e) {
+      }
+    
+      @Override
+      public void mouseExited(MouseEvent e) {
+      }
+    
+      @Override
+      public void mouseEntered(MouseEvent e) {
+      }
+    
+      @Override
+      public void mouseClicked(MouseEvent e) {
+        visibleRulesSelectListeners.forEach(vrsl -> vrsl.mouseClicked(e));
       }
     });
 
@@ -304,6 +339,8 @@ public class ConfigurationEditorWindow extends JFrame {
         int index = activeRulesList.locationToIndex(e.getPoint());
         if (index > -1) {
           activeRulesList.setToolTipText(activeRulesList.getModel().getElementAt(index).getRuleDescription());
+        } else {
+          activeRulesList.setToolTipText("");
         }
       }
 
@@ -311,10 +348,26 @@ public class ConfigurationEditorWindow extends JFrame {
       public void mouseDragged(MouseEvent e) {
       }
     });
-    this.activeRulesList.addListSelectionListener(new ListSelectionListener() {
+    this.activeRulesList.addMouseListener(new MouseListener(){
       @Override
-      public void valueChanged(ListSelectionEvent e) {
-        activeRulesSelectListeners.forEach(arsl -> arsl.valueChanged(e));
+      public void mouseReleased(MouseEvent e) {
+      }
+    
+      @Override
+      public void mousePressed(MouseEvent e) {
+      }
+    
+      @Override
+      public void mouseExited(MouseEvent e) {
+      }
+    
+      @Override
+      public void mouseEntered(MouseEvent e) {
+      }
+    
+      @Override
+      public void mouseClicked(MouseEvent e) {
+        activeRulesSelectListeners.forEach(arsl -> arsl.mouseClicked(e));
       }
     });
 
@@ -452,20 +505,20 @@ public class ConfigurationEditorWindow extends JFrame {
    * Registers a listener for one of the selection lists in the editor window
    * (Categories, Visible Rules, Active Rules).
    * 
-   * @param lsl           The listener to register
+   * @param ml           The listener to register
    * @param selectionList The selection list with which to register
    *                      <code>lsl</code>
    */
-  public void addSelectionListener(ListSelectionListener lsl, ConfigurationListeners selectionList) {
+  public void addSelectionListener(MouseListener ml, ConfigurationListeners selectionList) {
     switch (selectionList) {
     case CATEGORY_SELECT_LISTENER:
-      this.categorySelectListeners.add(lsl);
+      this.categorySelectListeners.add(ml);
       break;
     case VISIBLE_RULES_SELECT_LISTENER:
-      this.visibleRulesSelectListeners.add(lsl);
+      this.visibleRulesSelectListeners.add(ml);
       break;
     case ACTIVE_RULES_SELECT_LISTENER:
-      this.activeRulesSelectListeners.add(lsl);
+      this.activeRulesSelectListeners.add(ml);
       break;
     default:
       break;

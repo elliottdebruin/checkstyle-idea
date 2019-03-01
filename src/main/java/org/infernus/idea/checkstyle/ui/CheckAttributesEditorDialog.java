@@ -10,7 +10,6 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 
 import javax.swing.BorderFactory;
@@ -153,8 +152,9 @@ public class CheckAttributesEditorDialog extends JFrame {
 
       JTextField textField = new JTextField(20);
       if (config != null) {
-        // Throws an exception if attr has not been set, which CAN happen (rarely)
-        textField.setText(config.getAttribute(attr));
+        if (config.isAttributeSet(attr)) {
+          textField.setText(config.getAttribute(attr));
+        }
       }
       textField.addKeyListener(new KeyListener() {
         @Override
