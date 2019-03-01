@@ -473,7 +473,7 @@
     </category>
     <category name="Metrics">
         <module name="BooleanExpressionComplexity">
-            <description value="Restrict the number of number of &&, ||, &, | and ^ in an expression."/>
+            <description value="Restrict the number of number of &amp;&amp;, ||, &amp;, | and ^ in an expression."/>
             <property name="max" type="Integer" default="3"/>
             <property name="tokens" type="subset of tokens LAND, BAND, LOR, BOR, BXOR." default="LAND, BAND, LOR, BOR, BXOR."/>
         </module>
