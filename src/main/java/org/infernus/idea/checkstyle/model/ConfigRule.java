@@ -98,4 +98,9 @@ public class ConfigRule {
     public void addParameter(String name, PropertyMetadata metadata) {
         this.parameters.put(name, metadata);
     }
+
+    @Override
+    public String toString() {
+      return this.getRuleName();
+    }
 }

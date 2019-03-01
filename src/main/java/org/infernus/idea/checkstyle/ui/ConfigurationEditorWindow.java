@@ -400,8 +400,11 @@ public class ConfigurationEditorWindow extends JFrame {
    * @return The currently-selected active rule
    */
   public ConfigRule getSelectedActiveRule() {
-    System.out.println(this.activeRulesList.getSelectedValue());
     return this.activeRulesList.getSelectedValue();
+  }
+
+  public int getSelectedActiveIndex() {
+    return this.activeRulesList.getSelectedIndex();
   }
 
   /**
