@@ -418,7 +418,7 @@
             <property name="scope" type="Scope" default="private"/>
             <property name="excludeScope" type="Scope" default="null"/>
             <property name="checkFirstSentence" type="Boolean" default="true"/>
-            <property name="endOfSentenceFormat" type="Regular Expression" default="([.?!][ \t\n\r\f<])|([.?!]$)"/>
+            <property name="endOfSentenceFormat" type="Regular Expression" default="([.?!][ \t\n\r\f&lt;])|([.?!]$)"/>
             <property name="checkEmptyJavadoc" type="Boolean" default="false"/>
             <property name="checkHtml" type="Boolean" default="true"/>
             <property name="tokens" type="subset of tokens ANNOTATION_DEF, ANNOTATION_FIELD_DEF, CLASS_DEF, CTOR_DEF, ENUM_CONSTANT_DEF, ENUM_DEF, INTERFACE_DEF, METHOD_DEF, PACKAGE_DEF, VARIABLE_DEF." default="ANNOTATION_DEF, ANNOTATION_FIELD_DEF, CLASS_DEF, CTOR_DEF, ENUM_CONSTANT_DEF, ENUM_DEF, INTERFACE_DEF, METHOD_DEF, PACKAGE_DEF, VARIABLE_DEF."/>
@@ -822,7 +822,7 @@
             <property name="fileExtensions" type="String Set" default="all files"/>
         </module>
         <module name="GenericWhitespace">
-            <description value="Checks that the whitespace around the Generic tokens (angle brackets) < and > are correct to the typical convention."/>
+            <description value="Checks that the whitespace around the Generic tokens (angle brackets) &lt; and > are correct to the typical convention."/>
         </module>
         <module name="MethodParamPad">
             <description value="Checks the padding between the identifier of a method definition, constructor definition, method call, or constructor invocation; and the left parenthesis of the parameter list."/>
