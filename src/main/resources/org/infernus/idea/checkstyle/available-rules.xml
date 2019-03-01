@@ -32,11 +32,11 @@
             <property name="trailingArrayComma" type="Trailing Comma" default="never"/>
         </module>
         <module name="MissingDeprecated">
-            <description value="Verifies that both the java."/>
+            <description value="Verifies that both the java.lang.Deprecated annotation is present and the @deprecated Javadoc tag is present when either is present."/>
             <property name="skipNoJavadoc" type="Boolean" default="false"/>
         </module>
         <module name="MissingOverride">
-            <description value="Verifies that the java."/>
+            <description value="Verifies that the java.lang.Override annotation is present when the {@inheritDoc} javadoc tag is present."/>
             <property name="javaFiveCompatibility" type="Boolean" default="false"/>
         </module>
         <module name="PackageAnnotation">
