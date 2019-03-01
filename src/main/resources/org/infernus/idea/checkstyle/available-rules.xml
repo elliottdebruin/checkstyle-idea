@@ -40,7 +40,7 @@
             <property name="javaFiveCompatibility" type="Boolean" default="false"/>
         </module>
         <module name="PackageAnnotation">
-            <description value="This check makes sure that all package annotations are in the package-info."/>
+            <description value="This check makes sure that all package annotations are in the package-info.java file."/>
         </module>
         <module name="SuppressWarnings">
             <description value="This check allows you to specify what warnings that SuppressWarnings is not allowed to suppress."/>
