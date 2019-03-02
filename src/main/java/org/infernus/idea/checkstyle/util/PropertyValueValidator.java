@@ -77,6 +77,16 @@ public class PropertyValueValidator {
         }
       }
       return true;
+    } else if (type.equals("Severity")) {
+      return value.equals("ignore") || value.equals("info") || value.equals("warning") || value.equals("error");
+    } else if (type.equals("Import Order Policy")) {
+      return value.equals("top") || value.equals("above") || value.equals("inflow") || value.equals("under")
+              || value.equals("bottom");
+    } else if (type.equals("Element Style")) {
+      return value.equals("expanded") || value.equals("compact") || value.equals("compact_no_array")
+              || value.equals("ignore");
+    } else if (type.equals("Closing Parens") || type.equals("Trailing Comma")) {
+      return value.equals("always") || value.equals("never") || value.equals("ignore");
     }
 
     throw new IllegalArgumentException();

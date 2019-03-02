@@ -123,4 +123,53 @@ public class PropertyValueValidatorTest {
     assertFalse(PropertyValueValidator.validate("Access Modifier Set", "nleol"));
     assertFalse(PropertyValueValidator.validate("Access Modifier Set", "private, protected, nleol"));
   }
+
+  @Test
+  public void PropertyValueValidatorSeverityTest() {
+    assertTrue(PropertyValueValidator.validate("Severity", "ignore"));
+    assertTrue(PropertyValueValidator.validate("Severity", "info"));
+    assertTrue(PropertyValueValidator.validate("Severity", "warning"));
+    assertTrue(PropertyValueValidator.validate("Severity", "error"));
+
+    assertFalse(PropertyValueValidator.validate("Severity", "nleol"));
+  }
+
+  @Test
+  public void PropertyValueValidatorImportOrderPolicyTest() {
+    assertTrue(PropertyValueValidator.validate("Import Order Policy", "top"));
+    assertTrue(PropertyValueValidator.validate("Import Order Policy", "above"));
+    assertTrue(PropertyValueValidator.validate("Import Order Policy", "inflow"));
+    assertTrue(PropertyValueValidator.validate("Import Order Policy", "under"));
+    assertTrue(PropertyValueValidator.validate("Import Order Policy", "bottom"));
+
+    assertFalse(PropertyValueValidator.validate("Import Order Policy", "nleol"));
+  }
+
+  @Test
+  public void PropertyValueValidatorElementStyleTest() {
+    assertTrue(PropertyValueValidator.validate("Element Style", "expanded"));
+    assertTrue(PropertyValueValidator.validate("Element Style", "compact"));
+    assertTrue(PropertyValueValidator.validate("Element Style", "compact_no_array"));
+    assertTrue(PropertyValueValidator.validate("Element Style", "ignore"));
+
+    assertFalse(PropertyValueValidator.validate("Element Style", "nleol"));
+  }
+
+  @Test
+  public void PropertyValueValidatorClosingParensTest() {
+    assertTrue(PropertyValueValidator.validate("Closing Parens", "always"));
+    assertTrue(PropertyValueValidator.validate("Closing Parens", "never"));
+    assertTrue(PropertyValueValidator.validate("Closing Parens", "ignore"));
+
+    assertFalse(PropertyValueValidator.validate("Closing Parens", "nleol"));
+  }
+
+  @Test
+  public void PropertyValueValidatorTrailingCommaTest() {
+    assertTrue(PropertyValueValidator.validate("Trailing Comma", "always"));
+    assertTrue(PropertyValueValidator.validate("Trailing Comma", "never"));
+    assertTrue(PropertyValueValidator.validate("Trailing Comma", "ignore"));
+
+    assertFalse(PropertyValueValidator.validate("Trailing Comma", "nleol"));
+  }
 }
