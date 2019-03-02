@@ -50,6 +50,33 @@ public class PropertyValueValidator {
 
       return urlValidator.isValid(value) || Pattern.matches("^([\\p{L}_$][\\p{L}\\p{N}_$]*\\.)*[\\p{L}_$][\\p{L}\\p{N}_$]*$", value)
               || (new File(value).exists());
+    } else if (type.equals("lineSeparator")) {
+      return value.equals("crlf") || value.equals("cr") || value.equals("lf") || value.equals("lf_cr_crlf")
+              || value.equals("system");
+    } else if (type.equals("Pad Policy")) {
+      return value.equals("nospace") || value.equals("space");
+    } else if (type.equals("Wrap Operator Policy")) {
+      return value.equals("nl") || value.equals("eol");
+    } else if (type.equals("Block Policy")) {
+      return value.equals("text") || value.equals("statement");
+    } else if (type.equals("Scope")) {
+      return value.equals("nothing") || value.equals("public") || value.equals("protected")
+              || value.equals("package") || value.equals("private") || value.equals("anoninner");
+    } else if (type.equals("Access Modifier Set")) {
+      String split[] = value.split(", ");
+
+      if (split.length == 0) {
+        return value.equals("public") || value.equals("protected")
+                || value.equals("package") || value.equals("private");
+      }
+
+      for (String subValue : split) {
+        if (!(subValue.equals("public") || subValue.equals("protected")
+                || subValue.equals("package") || subValue.equals("private"))) {
+          return false;
+        }
+      }
+      return true;
     }
 
     throw new IllegalArgumentException();

@@ -64,4 +64,63 @@ public class PropertyValueValidatorTest {
     assertFalse(PropertyValueValidator.validate("URI", "0org.infer156nus.idea.checkstyle"));
     assertFalse(PropertyValueValidator.validate("URI", "not exist file"));
   }
+
+  @Test
+  public void PropertyValueValidatorLineSeparatorTest() {
+    assertTrue(PropertyValueValidator.validate("lineSeparator", "crlf"));
+    assertTrue(PropertyValueValidator.validate("lineSeparator", "cr"));
+    assertTrue(PropertyValueValidator.validate("lineSeparator", "lf"));
+    assertTrue(PropertyValueValidator.validate("lineSeparator", "lf_cr_crlf"));
+    assertTrue(PropertyValueValidator.validate("lineSeparator", "system"));
+
+    assertFalse(PropertyValueValidator.validate("lineSeparator", "somthing else"));
+  }
+
+  @Test
+  public void PropertyValueValidatorPadPolicyTest() {
+    assertTrue(PropertyValueValidator.validate("Pad Policy", "nospace"));
+    assertTrue(PropertyValueValidator.validate("Pad Policy", "space"));
+
+    assertFalse(PropertyValueValidator.validate("Pad Policy", "space?"));
+  }
+
+  @Test
+  public void PropertyValueValidatorWrapOperatorPolicyTest() {
+    assertTrue(PropertyValueValidator.validate("Wrap Operator Policy", "nl"));
+    assertTrue(PropertyValueValidator.validate("Wrap Operator Policy", "eol"));
+
+    assertFalse(PropertyValueValidator.validate("Wrap Operator Policy", "nleol"));
+  }
+
+  @Test
+  public void PropertyValueValidatorBlockPolicyTest() {
+    assertTrue(PropertyValueValidator.validate("Block Policy", "text"));
+    assertTrue(PropertyValueValidator.validate("Block Policy", "statement"));
+
+    assertFalse(PropertyValueValidator.validate("Block Policy", "nleol"));
+  }
+
+  @Test
+  public void PropertyValueValidatorScopeTest() {
+    assertTrue(PropertyValueValidator.validate("Scope", "nothing"));
+    assertTrue(PropertyValueValidator.validate("Scope", "public"));
+    assertTrue(PropertyValueValidator.validate("Scope", "protected"));
+    assertTrue(PropertyValueValidator.validate("Scope", "package"));
+    assertTrue(PropertyValueValidator.validate("Scope", "private"));
+    assertTrue(PropertyValueValidator.validate("Scope", "anoninner"));
+
+    assertFalse(PropertyValueValidator.validate("Scope", "nleol"));
+  }
+
+  @Test
+  public void PropertyValueValidatorAccessModifierSetTest() {
+    assertTrue(PropertyValueValidator.validate("Access Modifier Set", "public"));
+    assertTrue(PropertyValueValidator.validate("Access Modifier Set", "protected"));
+    assertTrue(PropertyValueValidator.validate("Access Modifier Set", "package"));
+    assertTrue(PropertyValueValidator.validate("Access Modifier Set", "private"));
+    assertTrue(PropertyValueValidator.validate("Access Modifier Set", "private, protected"));
+
+    assertFalse(PropertyValueValidator.validate("Access Modifier Set", "nleol"));
+    assertFalse(PropertyValueValidator.validate("Access Modifier Set", "private, protected, nleol"));
+  }
 }
