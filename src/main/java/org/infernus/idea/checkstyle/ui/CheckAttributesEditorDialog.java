@@ -64,6 +64,8 @@ public class CheckAttributesEditorDialog extends JFrame {
     createWindowContent();
     setLocationByPlatform(true);
     setMinimumSize(new Dimension(600, 400));
+    setMaximumSize(new Dimension(1920, 1080));
+    setResizable(false);
   }
 
   protected void createWindowContent() {
