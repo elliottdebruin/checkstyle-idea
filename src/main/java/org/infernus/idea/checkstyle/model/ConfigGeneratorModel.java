@@ -7,10 +7,7 @@ import org.xml.sax.SAXException;
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 public class ConfigGeneratorModel {
     /** The current state of the configuration */
@@ -20,13 +17,12 @@ public class ConfigGeneratorModel {
     private String path;
 
     /** The name of the configuration file */
-    String configName;
+    private String configName;
 
-    /** The set of rules that are currently in the configuration */
-    private Set<ConfigRule> activeRules;
-
-    /** The set of possible rules a user can add to the configuration */
-    private Set<XMLConfig> rules;
+    /** The Map<String, ConfigRule> with the String being the name of a rule
+     * mapping to the corresponding ConfigRule
+     */
+    private Map<String, ConfigRule> activeRules;
 
     /**
      * Creates a new ConfigGeneratorModel with a blank XML configuration, file name,
@@ -36,8 +32,7 @@ public class ConfigGeneratorModel {
         this.path = "";
         this.configName = "";
         this.config = new XMLConfig("Checker");
-        this.activeRules = new HashSet<>();
-        this.rules = new HashSet<>();
+        this.activeRules = new HashMap<>();
     }
 
     /**
@@ -60,7 +55,7 @@ public class ConfigGeneratorModel {
      * @throws IOException - When file could not be created with the path
      */
     public void generateConfig(String fileName) throws IOException {
-        String filepath = path + configName;
+        String filepath = path + fileName;
         ConfigWriter.saveConfig(filepath, config);
     }
 
@@ -75,7 +70,6 @@ public class ConfigGeneratorModel {
      *         report when this error is thrown
      */
     public void importConfig(String fileName) throws ParserConfigurationException, SAXException, IOException {
-        path = fileName.substring(0, fileName.lastIndexOf('/') + 1);
         configName = fileName.substring(fileName.lastIndexOf('/') + 1);
         config = ConfigReader.readConfig(path + fileName);
     }
@@ -83,11 +77,11 @@ public class ConfigGeneratorModel {
     /**
      * Returns a set of the active rules in the current configuration
      *
-     * @return a Set<ConfigRule> of all the active rules in the current
+     * @return a Collection<XMLConfig> of all the active rules in the current
      *         configuration
      */
-    public Set<ConfigRule> getActiveRules() {
-        return new HashSet<>(activeRules);
+    public Collection<XMLConfig> getActiveRules() {
+        return null;
     }
 
     /**
@@ -96,7 +90,8 @@ public class ConfigGeneratorModel {
      * @param rule the rule to get the XML representation for
      * @return the XML format for the given rule
      */
-    public XMLConfig getXMLforConfigRule(ConfigRule rule) {
+    public ConfigRule getConfigRuleforXML(XMLConfig rule) {
+        String ruleName = rule.getName();
         return null;
     }
 
@@ -117,7 +112,7 @@ public class ConfigGeneratorModel {
      *         representing the rule categories, which map to Lists of
      *         ConfigRules, which contain all details for a given rule.
      */
-    public Map<String, List<ConfigRule>> getAvailableRules() {
+    public TreeMap<String, List<ConfigRule>> getAvailableRules() {
         return null;
     }
 
