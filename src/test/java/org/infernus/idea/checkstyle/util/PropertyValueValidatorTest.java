@@ -5,10 +5,6 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 
 public class PropertyValueValidatorTest {
-  @Test(expected = IllegalArgumentException.class)
-  public void PropertyValueValidatorIllegalTypeTest() {
-    PropertyValueValidator.validate("Not a type", "");
-  }
   @Test
   public void PropertyValueValidatorIntegerTest() {
     assertTrue(PropertyValueValidator.validate("Integer", "20"));

@@ -11,10 +11,10 @@ public class PropertyValueValidator {
    * Validates the value according to the type
    * @param type - The type of the value
    * @param value - The value to validate
-   * @return true when the value passed the according validation
-   * @throws IllegalArgumentException - When type is not a checkstyle property type
+   * @return true when the value passed the according validation, or when there is no
+   *         validation for the specific type
    */
-  public static boolean validate(String type, String value) throws IllegalArgumentException {
+  public static boolean validate(String type, String value) {
     if (type.equals("Integer")) {
       return Pattern.matches("^[0-9]+$", value);
     } else if (type.equals("String") || type.equals("String Set")) {
@@ -89,6 +89,6 @@ public class PropertyValueValidator {
       return value.equals("always") || value.equals("never") || value.equals("ignore");
     }
 
-    throw new IllegalArgumentException();
+    return true;
   }
 }
