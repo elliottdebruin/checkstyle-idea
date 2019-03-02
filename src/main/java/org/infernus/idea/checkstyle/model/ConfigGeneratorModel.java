@@ -16,9 +16,6 @@ public class ConfigGeneratorModel {
     /** The path the the config will be saved to when it is generated */
     private String path;
 
-    /** The name of the configuration file */
-    private String configName;
-
     /** The Map<String, ConfigRule> with the String being the name of a rule
      * mapping to the corresponding ConfigRule
      */
@@ -30,7 +27,6 @@ public class ConfigGeneratorModel {
      */
     public ConfigGeneratorModel() {
         this.path = "";
-        this.configName = "";
         this.config = new XMLConfig("Checker");
         this.activeRules = new HashMap<>();
     }
@@ -55,7 +51,7 @@ public class ConfigGeneratorModel {
      * @throws IOException - When file could not be created with the path
      */
     public void generateConfig(String fileName) throws IOException {
-        String filepath = path + fileName;
+        String filepath = path + fileName + ".xml";
         ConfigWriter.saveConfig(filepath, config);
     }
 
@@ -70,8 +66,7 @@ public class ConfigGeneratorModel {
      *         report when this error is thrown
      */
     public void importConfig(String fileName) throws ParserConfigurationException, SAXException, IOException {
-        configName = fileName.substring(fileName.lastIndexOf('/') + 1);
-        config = ConfigReader.readConfig(path + fileName);
+        config = ConfigReader.readConfig(path + fileName + ".xml");
     }
 
     /**
