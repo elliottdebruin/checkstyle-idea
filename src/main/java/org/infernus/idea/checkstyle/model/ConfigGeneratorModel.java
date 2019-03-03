@@ -22,6 +22,11 @@ public class ConfigGeneratorModel {
     private Map<String, ConfigRule> activeRules;
 
     /**
+     *
+     */
+    private Set<XMLConfig> xmlConfigs;
+
+    /**
      * Creates a new ConfigGeneratorModel with a blank XML configuration, file name,
      * path to the file, and set of active rules
      */
@@ -38,7 +43,7 @@ public class ConfigGeneratorModel {
      *             to the configuration
      */
     public void addActiveRule(XMLConfig rule) {
-
+        xmlConfigs.add(rule);
     }
 
     /**
@@ -51,6 +56,9 @@ public class ConfigGeneratorModel {
      * @throws IOException - When file could not be created with the path
      */
     public void generateConfig(String fileName) throws IOException {
+        for (XMLConfig rule : xmlConfigs) {
+            config.addChild(rule);
+        }
         String filepath = path + fileName + ".xml";
         ConfigWriter.saveConfig(filepath, config);
     }
@@ -76,7 +84,7 @@ public class ConfigGeneratorModel {
      *         configuration
      */
     public Collection<XMLConfig> getActiveRules() {
-        return null;
+        return new HashSet<>(xmlConfigs);
     }
 
     /**
@@ -96,7 +104,7 @@ public class ConfigGeneratorModel {
      * @param rule the rule to remove from the XML config
      */
     public void removeActiveRule(XMLConfig rule) {
-
+        xmlConfigs.remove(rule);
     }
 
     /**
