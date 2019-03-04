@@ -19,27 +19,28 @@ public class ConfigGeneratorModel {
     /** The path the the config will be saved to when it is generated */
     private String path;
 
-    /** The Map<String, ConfigRule> with the String being the name of a rule
+    /**
+     * The Map<String, ConfigRule> with the String being the name of a rule
      * mapping to the corresponding ConfigRule
      */
     private Map<String, ConfigRule> activeRules;
 
-    /**
-     *
-     */
+    /** XMLConfig representations of all the active rules for the config */
     private Set<XMLConfig> xmlConfigs;
 
     /**
-     *
+     * A TreeMap<String, List<ConfigRule>> with names of all rule categories
+     * mapping to lists of all available rules in each category
      */
-    private Project project;
+    private TreeMap<String, List<ConfigRule>> possibleRules;
 
     /**
      * Creates a new ConfigGeneratorModel with a blank XML configuration, file name,
      * path to the file, and set of active rules
      */
     public ConfigGeneratorModel(Project project) {
-        this.project = project;
+        CheckStyleRuleProvider provider = new CheckStyleRuleProvider();
+        this.possibleRules = new TreeMap<>(provider.getDefaultCategorizedRule());
         this.path = project.getBasePath() + ".idea/";
         this.config = new XMLConfig("Checker");
         this.activeRules = new HashMap<>();
@@ -88,14 +89,21 @@ public class ConfigGeneratorModel {
     }
 
     /**
-     * Returns the XML configuration representation for the given rule
+     * Returns the ConfigRule representation for the given XML rule configuration
      *
-     * @param rule the rule to get the XML representation for
-     * @return the XML format for the given rule
+     * @param rule the rule to get the ConfigRule representation for
+     * @return the ConfigRule representation for the given XML rule configuration
      */
     public ConfigRule getConfigRuleforXML(XMLConfig rule) {
         String ruleName = rule.getName();
-        return activeRules.get(ruleName);
+        for (String cat : possibleRules.keySet()) {
+            for (ConfigRule ruleDetails : possibleRules.get(cat)) {
+                if (ruleName.equals(ruleDetails.getRuleName())) {
+                    return ruleDetails;
+                }
+            }
+        }
+        return null;
     }
 
     /**
@@ -107,9 +115,7 @@ public class ConfigGeneratorModel {
      *         ConfigRules, which contain all details for a given rule.
      */
     public TreeMap<String, List<ConfigRule>> getAvailableRules() {
-        CheckStyleRuleProvider provider = new CheckStyleRuleProvider();
-        TreeMap<String, List<ConfigRule>> possibleRules = new TreeMap<>(provider.getDefaultCategorizedRule());
-        return possibleRules;
+        return new TreeMap<>(possibleRules);
     }
 
     /**

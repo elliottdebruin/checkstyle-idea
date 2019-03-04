@@ -28,7 +28,7 @@ public class ConfigGeneratorModelTest {
         File xml = new File(".idea/configs/test.xml");
         Scanner scan = new Scanner(xml);
         while(scan.hasNextLine()) {
-            System.out.println(scan.nextLine());
+        ///    System.out.println(scan.nextLine());
         }
         Project p = mock(Project.class);
          //p.
@@ -53,7 +53,13 @@ public class ConfigGeneratorModelTest {
 
     @Test
     public void GetConfigRuleForXMLTest() {
-
+        XMLConfig xmlConfig = new XMLConfig("AbstractClassName");
+        ConfigRule rule = model.getConfigRuleforXML(xmlConfig);
+        assertEquals("AbstractClassName", rule.getRuleName());
+        String description = "Ensures that the names of abstract classes " +
+                "conforming to some regular expression and check that " +
+                "abstract modifier exists.";
+        //assertEquals(description, rule.getRuleDescription());
     }
 
     @Test
@@ -87,7 +93,7 @@ public class ConfigGeneratorModelTest {
 
     @Test
     public void GetConfigNamesTest() {
-
+        //Set<String> names = model.getConfigNames();
     }
 
     @Test
