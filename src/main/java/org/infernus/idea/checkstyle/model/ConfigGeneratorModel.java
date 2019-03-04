@@ -1,10 +1,13 @@
 package org.infernus.idea.checkstyle.model;
 
+import com.intellij.openapi.project.Project;
+import org.infernus.idea.checkstyle.util.CheckStyleRuleProvider;
 import org.infernus.idea.checkstyle.util.ConfigReader;
 import org.infernus.idea.checkstyle.util.ConfigWriter;
 import org.xml.sax.SAXException;
 
 import javax.xml.parsers.ParserConfigurationException;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.*;
@@ -27,23 +30,20 @@ public class ConfigGeneratorModel {
     private Set<XMLConfig> xmlConfigs;
 
     /**
+     *
+     */
+    private Project project;
+
+    /**
      * Creates a new ConfigGeneratorModel with a blank XML configuration, file name,
      * path to the file, and set of active rules
      */
-    public ConfigGeneratorModel() {
-        this.path = "";
+    public ConfigGeneratorModel(Project project) {
+        this.project = project;
+        this.path = project.getBasePath() + ".idea/";
         this.config = new XMLConfig("Checker");
         this.activeRules = new HashMap<>();
-    }
-
-    /**
-     * Adds a new rule to the current configuration state
-     *
-     * @param rule the XMLConfig representation of the rule to be added
-     *             to the configuration
-     */
-    public void addActiveRule(XMLConfig rule) {
-        xmlConfigs.add(rule);
+        this.xmlConfigs = new HashSet<>();
     }
 
     /**
@@ -95,16 +95,7 @@ public class ConfigGeneratorModel {
      */
     public ConfigRule getConfigRuleforXML(XMLConfig rule) {
         String ruleName = rule.getName();
-        return null;
-    }
-
-    /**
-     * Removes an active rule from the current configuration
-     *
-     * @param rule the rule to remove from the XML config
-     */
-    public void removeActiveRule(XMLConfig rule) {
-        xmlConfigs.remove(rule);
+        return activeRules.get(ruleName);
     }
 
     /**
@@ -116,7 +107,9 @@ public class ConfigGeneratorModel {
      *         ConfigRules, which contain all details for a given rule.
      */
     public TreeMap<String, List<ConfigRule>> getAvailableRules() {
-        return null;
+        CheckStyleRuleProvider provider = new CheckStyleRuleProvider();
+        TreeMap<String, List<ConfigRule>> possibleRules = new TreeMap<>(provider.getDefaultCategorizedRule());
+        return possibleRules;
     }
 
     /**
@@ -127,6 +120,47 @@ public class ConfigGeneratorModel {
      *         will look like.
      */
     public String getPreview() {
-        return "";
+        XMLConfig preview = new XMLConfig("Checker");
+        for (XMLConfig rule : xmlConfigs) {
+            config.addChild(rule);
+        }
+        return ConfigWriter.xmlPreview(preview);
+    }
+
+    /**
+     * Returns the names of all the possible configuration files a user
+     * can import.
+     *
+     * @return a Set<String> containing the names of all the possible configuration files a user
+     *         can import.
+     */
+    public Set<String> getConfigNames() {
+        Set<String> configFileNames = new HashSet<>();
+        File[] configs = new File(path).listFiles();
+        for (File configFile : configs) {
+            if (configFile.isFile()) {
+                configFileNames.add(configFile.getName());
+            }
+        }
+        return configFileNames;
+    }
+
+    /**
+     * Adds a new rule to the current configuration state
+     *
+     * @param rule the XMLConfig representation of the rule to be added
+     *             to the configuration
+     */
+    public void addActiveRule(XMLConfig rule) {
+        xmlConfigs.add(rule);
+    }
+
+    /**
+     * Removes an active rule from the current configuration
+     *
+     * @param rule the rule to remove from the XML config
+     */
+    public void removeActiveRule(XMLConfig rule) {
+        xmlConfigs.remove(rule);
     }
 }
