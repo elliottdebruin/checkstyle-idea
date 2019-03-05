@@ -1,0 +1,8 @@
+Goal:
+	Build Rule Provider and Validator
+
+Progress:
+	Built and tested Rule Provider and Validator
+
+Next Goal:
+	Connect all MVC modules
