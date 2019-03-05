@@ -20,7 +20,7 @@ public class ConfigGeneratorModel {
      * The Map<String, ConfigRule> with the String being the name of a rule
      * mapping to the corresponding ConfigRule
      */
-    private Map<String, ConfigRule> activeRules;
+    private Map<String, ConfigRule> availableRules;
 
     /** XMLConfig representations of all the active rules for the config */
     private List<XMLConfig> xmlConfigs;
@@ -40,9 +40,14 @@ public class ConfigGeneratorModel {
      */
     public ConfigGeneratorModel(Project project) {
         CheckStyleRuleProvider provider = new CheckStyleRuleProvider();
+        this.availableRules = new HashMap<>();
         this.possibleRules = new TreeMap<>(provider.getDefaultCategorizedRule());
+        for (String cat : possibleRules.keySet()) {
+            for (ConfigRule ruleDetails : possibleRules.get(cat)) {
+                availableRules.put(ruleDetails.getRuleName(), ruleDetails);
+            }
+        }
         this.config = new XMLConfig("Checker");
-        this.activeRules = new HashMap<>();
         this.xmlConfigs = new LinkedList<>();
         this.project = project;
     }
@@ -57,9 +62,7 @@ public class ConfigGeneratorModel {
      * @throws IOException - When file could not be created with the path
      */
     public void generateConfig(String fileName) throws IOException {
-        for (XMLConfig rule : xmlConfigs) {
-            config.addChild(rule);
-        }
+        config = generateCurrentConfig();
         String filepath = project.getBasePath() + "/.idea/configs/" + fileName + ".xml";
         ConfigWriter.saveConfig(filepath, config);
     }
@@ -96,14 +99,7 @@ public class ConfigGeneratorModel {
      */
     public ConfigRule getConfigRuleforXML(XMLConfig rule) {
         String ruleName = rule.getName();
-        for (String cat : possibleRules.keySet()) {
-            for (ConfigRule ruleDetails : possibleRules.get(cat)) {
-                if (ruleName.equals(ruleDetails.getRuleName())) {
-                    return ruleDetails;
-                }
-            }
-        }
-        return null;
+        return availableRules.get(ruleName);
     }
 
     /**
@@ -126,11 +122,38 @@ public class ConfigGeneratorModel {
      *         will look like.
      */
     public String getPreview() {
+        XMLConfig preview = generateCurrentConfig();
+        return ConfigWriter.xmlPreview(preview);
+    }
+
+    /**
+     * Generates a XMLConfig with the state of the current config
+     *
+     * @return a XMLConfig with the state of the current config
+     */
+    private XMLConfig generateCurrentConfig() {
         XMLConfig preview = new XMLConfig("Checker");
         for (XMLConfig rule : xmlConfigs) {
-            preview.addChild(rule);
+            if (availableRules.get(rule.getName()).getParent().equals("TreeWalker")) {
+                XMLConfig[] children = preview.getChildren();
+                boolean hasWalker = false;
+                for (XMLConfig child : children) {
+                    if (child.getName().equals("TreeWalker")) {
+                        child.addChild(rule);
+                        hasWalker = true;
+                        break;
+                    }
+                }
+                if (!hasWalker) {
+                    XMLConfig walker = new XMLConfig("TreeWalker");
+                    walker.addChild(rule);
+                    preview.addChild(walker);
+                }
+            } else {
+                preview.addChild(rule);
+            }
         }
-        return ConfigWriter.xmlPreview(preview);
+        return preview;
     }
 
     /**
