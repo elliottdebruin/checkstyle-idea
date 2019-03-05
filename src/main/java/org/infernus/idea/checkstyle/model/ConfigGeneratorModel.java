@@ -40,7 +40,8 @@ public class ConfigGeneratorModel {
      */
     public ConfigGeneratorModel(Project project) {
         CheckStyleRuleProvider provider = new CheckStyleRuleProvider();
-        this.possibleRules = new TreeMap<>(provider.getDefaultCategorizedRule());
+        provider.getDefaultCategorizedRule();
+        this.possibleRules = new TreeMap<>((TreeMap<String, List<ConfigRule>>)provider.getDefaultCategorizedRule());
         this.path = project.getBasePath() + ".idea/";
         this.config = new XMLConfig("Checker");
         this.activeRules = new HashMap<>();
