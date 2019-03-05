@@ -65,7 +65,9 @@ public class ConfigWriterTest {
 
     ConfigWriter.saveConfig(easyConfigName, this.plainConfig);
 
-    XMLConfig read = ConfigReader.readConfig(easyConfigName);
+    File easyConfigFile = new File(easyConfigName);
+
+    XMLConfig read = ConfigReader.readConfig(easyConfigFile);
 
     assertEquals("Checker", read.getName());
 
@@ -115,7 +117,8 @@ public class ConfigWriterTest {
 
     ConfigWriter.saveConfig(complicatedConfigName, this.plainConfig);
 
-    XMLConfig read = ConfigReader.readConfig(complicatedConfigName);
+    File complicatedConfigNameFile = new File(complicatedConfigName);
+    XMLConfig read = ConfigReader.readConfig(complicatedConfigNameFile);
 
     assertEquals("Checker", read.getName());
     assertEquals(1, read.getAttributeNames().length);
@@ -189,7 +192,8 @@ public class ConfigWriterTest {
     out.flush();
     out.close();
 
-    XMLConfig read = ConfigReader.readConfig(easyConfigPreviewName);
+    File easyConfigPreviewFile = new File(easyConfigPreviewName);
+    XMLConfig read = ConfigReader.readConfig(easyConfigPreviewFile);
 
     assertEquals("Checker", read.getName());
 
@@ -245,7 +249,8 @@ public class ConfigWriterTest {
     out.flush();
     out.close();
 
-    XMLConfig read = ConfigReader.readConfig(complicatedConfigPreviewName);
+    File complicatedConfigPreviewFile = new File(complicatedConfigPreviewName);
+    XMLConfig read = ConfigReader.readConfig(complicatedConfigPreviewFile);
 
     assertEquals("Checker", read.getName());
     assertEquals(1, read.getAttributeNames().length);

@@ -1,14 +1,17 @@
 package org.infernus.idea.checkstyle.util;
 
+import com.intellij.openapi.vfs.LocalFileSystem;
+import com.intellij.openapi.vfs.VirtualFile;
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
 import org.infernus.idea.checkstyle.model.XMLConfig;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.xml.sax.SAXException;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.PrintWriter;
+import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -158,42 +161,50 @@ public class ConfigReaderTest {
 
   @Test(expected = FileNotFoundException.class)
   public void ConfigReaderReadConfigFileNotExistTest() throws Exception {
-    ConfigReader.readConfig("definetely not a file");
+    File notAFile = new File("definetely not a file");
+    ConfigReader.readConfig(notAFile);
   }
 
   @Test(expected = IllegalArgumentException.class)
   public void ConfigReaderReadConfigNotXMLTest() throws Exception {
-    ConfigReader.readConfig(isNotXMLFileName);
+    File isNotXMLFileFile = new File(isNotXMLFileName);
+    ConfigReader.readConfig(isNotXMLFileFile);
   }
 
   @Test(expected = SAXException.class)
   public void ConfigReaderReadConfigInvalidXMLTest() throws Exception {
-    ConfigReader.readConfig(parseErrorXMLName);
+    File parseErrorXMLFile = new File(parseErrorXMLName);
+    ConfigReader.readConfig(parseErrorXMLFile);
   }
 
   @Test(expected = IllegalArgumentException.class)
   public void ConfigReaderReadConfigWrongRootTagTest() throws Exception {
-    ConfigReader.readConfig(invalidConfigName1);
+    File invalidConfigFile1 = new File(invalidConfigName1);
+    ConfigReader.readConfig(invalidConfigFile1);
   }
 
   @Test(expected = IllegalArgumentException.class)
   public void ConfigReaderReadConfigWrongNameTest() throws Exception {
-    ConfigReader.readConfig(invalidConfigName2);
+    File invalidConfigFile2 = new File(invalidConfigName2);
+    ConfigReader.readConfig(invalidConfigFile2);
   }
 
   @Test(expected = IllegalArgumentException.class)
   public void ConfigReaderReadConfigNoNameTest() throws Exception {
-    ConfigReader.readConfig(invalidConfigName3);
+    File invalidConfigFile3 = new File(invalidConfigName3);
+    ConfigReader.readConfig(invalidConfigFile3);
   }
 
   @Test
   public void ConfigReaderReadConfigIgnoreDTDTest() throws Exception {
-    ConfigReader.readConfig(ignoreDTD);
+    File ignoreDTDFile = new File(ignoreDTD);
+    ConfigReader.readConfig(ignoreDTDFile);
   }
 
   @Test
   public void ConfigReaderReadConfigOnlyPropertiesXMLTest() throws Exception {
-    XMLConfig result = ConfigReader.readConfig(onlyProperties);
+    File onlyPropertiesFile = new File(onlyProperties);
+    XMLConfig result = ConfigReader.readConfig(onlyPropertiesFile);
 
     assertEquals("Checker", result.getName());
     assertEquals(3, result.getAttributeNames().length);
@@ -207,7 +218,8 @@ public class ConfigReaderTest {
 
   @Test
   public void ConfigReaderReadConfigOnlyModuleXMLTest() throws Exception {
-    XMLConfig result = ConfigReader.readConfig(onlyModules);
+    File onlyModulesFile = new File(onlyModules);
+    XMLConfig result = ConfigReader.readConfig(onlyModulesFile);
 
     assertEquals("Checker", result.getName());
     assertEquals(0, result.getAttributeNames().length);
@@ -217,7 +229,8 @@ public class ConfigReaderTest {
 
   @Test
   public void ConfigReaderReadConfigHaveEverythingXMLTest() throws Exception {
-    XMLConfig result = ConfigReader.readConfig(haveEverything);
+    File haveEverythingFile = new File(haveEverything);
+    XMLConfig result = ConfigReader.readConfig(haveEverythingFile);
 
     assertEquals("Checker", result.getName());
     assertEquals(1, result.getAttributeNames().length);
@@ -264,5 +277,21 @@ public class ConfigReaderTest {
         assertTrue("unexpected child config " + child[i].getName(), false);
       }
     }
+  }
+
+  @Test
+  public void ConfigReaderReadFromTempFileTest() throws Exception{
+    File onlyModulesVFile = new File(onlyModules);
+    InputStream stream = new FileInputStream(onlyModulesVFile);
+    File onlyModulesFile = File.createTempFile("test", ".xml");
+    FileUtils.writeStringToFile(onlyModulesFile, IOUtils.toString(stream, StandardCharsets.UTF_8),
+            StandardCharsets.UTF_8);
+    stream.close();
+    XMLConfig result = ConfigReader.readConfig(onlyModulesFile);
+
+    assertEquals("Checker", result.getName());
+    assertEquals(0, result.getAttributeNames().length);
+    assertEquals(2, result.getChildren().length);
+    assertEquals(0, result.getMessages().size());
   }
 }

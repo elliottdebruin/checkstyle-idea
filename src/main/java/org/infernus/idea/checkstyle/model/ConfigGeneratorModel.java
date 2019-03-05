@@ -5,6 +5,7 @@ import org.infernus.idea.checkstyle.util.ConfigWriter;
 import org.xml.sax.SAXException;
 
 import javax.xml.parsers.ParserConfigurationException;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.*;
@@ -66,7 +67,8 @@ public class ConfigGeneratorModel {
      *         report when this error is thrown
      */
     public void importConfig(String fileName) throws ParserConfigurationException, SAXException, IOException {
-        config = ConfigReader.readConfig(path + fileName + ".xml");
+        File temp = new File(path + fileName + ".xml");
+        config = ConfigReader.readConfig(temp);
     }
 
     /**

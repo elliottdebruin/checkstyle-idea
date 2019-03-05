@@ -26,7 +26,7 @@ public class ConfigReader {
 
   /**
    * Reads an existing checkstyle configuration XML in path.
-   * @param path - The file path to the XML file.
+   * @param configFile - The file of the config
    * @return a set of configuration(modules) with module “Checker” as root
    * @throws FileNotFoundException - When the passed in file doesn’t exist.
    * @throws IllegalArgumentException - When the passed in file is not XML,
@@ -36,18 +36,17 @@ public class ConfigReader {
    * @throws SAXException - When parsing error occur
    * @throws IOException - If any IO errors occur.
    * */
-  public static XMLConfig readConfig(String path) throws IOException,
+  public static XMLConfig readConfig(File configFile) throws IOException,
           IllegalArgumentException,
           ParserConfigurationException,
           SAXException {
-    File configFile = new File(path);
 
     if (!configFile.exists()) {
-      throw new FileNotFoundException(path + " does not exist");
+      throw new FileNotFoundException(configFile.toString() + " does not exist");
     }
 
-    if (!Pattern.matches(".+\\.xml$", path)) {
-      throw new IllegalArgumentException(path + "is not a xml file");
+    if (!Pattern.matches(".+\\.xml$", configFile.toString())) {
+      throw new IllegalArgumentException(configFile.toString() + "is not a xml file");
     }
 
     DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
