@@ -4,7 +4,7 @@
 This document will walk you through the demo of the XML parser and writer in our initial result. Please follow this document accordingly to get the result we specified in the document.
 
 ## Requirements
-You are require to have `IntelliJ IDEA Community Edition 2018` with plugin `checkstyle-idea` installed. To install the plugin, press **Ctrl + Alt + S** to pull out the settings page, then click on `Plugins` on the left setting menu to get into the Plugins page. In the Plugins page, click on `Marketplace`, and type in `checkstyle-idea` in the search bar. Then click on the install button of the first search result.
+You are require to have `IntelliJ IDEA Community Edition 2018` with plugin `checkstyle-idea` installed. To install the plugin, press **Ctrl + Alt + S** on Windows (`⌘+,` on mac) to pull out the settings page, then click on `Plugins` on the left setting menu to get into the Plugins page. In the Plugins page, click on `Marketplace`, and type in `checkstyle-idea` in the search bar. Then click on the install button of the first search result.
 
 ## Instructions
 
