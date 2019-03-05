@@ -4,13 +4,11 @@ import com.intellij.openapi.project.Project;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.io.File;
-import java.io.FileNotFoundException;
 import java.util.*;
 
-import static org.junit.Assert.*;
-
-import static org.mockito.Mockito.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.mock;
 
 
 public class ConfigGeneratorModelTest {
@@ -22,17 +20,7 @@ public class ConfigGeneratorModelTest {
     }
 
     @Test
-    public void ConfigGeneratorRootIsCheckerTest() throws FileNotFoundException {
-        //ConfigGeneratorModel model = new ConfigGeneratorModel(null);
-       // assertEquals("Checker", model.config.getName());
-        File xml = new File(".idea/configs/test.xml");
-        Scanner scan = new Scanner(xml);
-        while(scan.hasNextLine()) {
-        ///    System.out.println(scan.nextLine());
-        }
-        Project p = mock(Project.class);
-         //p.
-        //System.out.println(p.getBasePath());
+    public void ConfigGeneratorRootIsCheckerTest() {
 
     }
 
@@ -56,10 +44,7 @@ public class ConfigGeneratorModelTest {
         XMLConfig xmlConfig = new XMLConfig("AbstractClassName");
         ConfigRule rule = model.getConfigRuleforXML(xmlConfig);
         assertEquals("AbstractClassName", rule.getRuleName());
-        String description = "Ensures that the names of abstract classes " +
-                "conforming to some regular expression and check that " +
-                "abstract modifier exists.";
-        //assertEquals(description, rule.getRuleDescription());
+
     }
 
     @Test
@@ -86,14 +71,30 @@ public class ConfigGeneratorModelTest {
     }
 
     @Test
-    public void ConfigPreviewTest() {
+    public void ConfigPreviewNoRulesTest() {
+        String preview = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>\n" +
+                "<!DOCTYPE module PUBLIC \"-//Checkstyle//DTD Checkstyle Configuration 1.3//EN\" " +
+                "\"https://checkstyle.org/dtds/configuration_1_3.dtd\">\n" +
+                "<module name=\"Checker\"/>\n";
+        assertEquals(preview, model.getPreview());
 
-        System.out.println(model.getPreview());
+    }
+
+    @Test
+    public void ConfigPreviewWithAddedRuleTest() {
+        String preview = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>\n" +
+                "<!DOCTYPE module PUBLIC \"-//Checkstyle//DTD Checkstyle Configuration 1.3//EN\" " +
+                "\"https://checkstyle.org/dtds/configuration_1_3.dtd\">\n" +
+                "<module name=\"Checker\">\n" +
+                "    <module name=\"Test\"/>\n" +
+                "</module>\n";
+        XMLConfig xmlConfig = new XMLConfig("Test");
+        model.addActiveRule(xmlConfig);
+        assertEquals(preview, model.getPreview());
     }
 
     @Test
     public void GetConfigNamesTest() {
-        //Set<String> names = model.getConfigNames();
     }
 
     @Test
