@@ -79,6 +79,15 @@ public class ConfigGeneratorModel {
      */
     public void importConfig(String fileName) throws ParserConfigurationException, SAXException, IOException {
         config = ConfigReader.readConfig(project.getBasePath() + "/.idea/configs/" + fileName + ".xml");
+        for (XMLConfig check : config.getChildren()) {
+            if (check.getName().equals("TreeWalker")) {
+                for (XMLConfig treeChild : check.getChildren()) {
+                    addActiveRule(treeChild);
+                }
+            } else {
+                addActiveRule(check);
+            }
+        }
     }
 
     /**
