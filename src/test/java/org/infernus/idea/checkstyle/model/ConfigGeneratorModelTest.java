@@ -82,13 +82,14 @@ public class ConfigGeneratorModelTest {
 
     @Test
     public void ConfigPreviewWithAddedRuleTest() {
+
         String preview = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>\n" +
                 "<!DOCTYPE module PUBLIC \"-//Checkstyle//DTD Checkstyle Configuration 1.3//EN\" " +
                 "\"https://checkstyle.org/dtds/configuration_1_3.dtd\">\n" +
                 "<module name=\"Checker\">\n" +
-                "    <module name=\"Test\"/>\n" +
+                "    <module name=\"FileTabCharacter\"/>\n" +
                 "</module>\n";
-        XMLConfig xmlConfig = new XMLConfig("Test");
+        XMLConfig xmlConfig = new XMLConfig("FileTabCharacter");
         model.addActiveRule(xmlConfig);
         assertEquals(preview, model.getPreview());
     }

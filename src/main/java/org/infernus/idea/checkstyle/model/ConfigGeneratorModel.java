@@ -106,9 +106,13 @@ public class ConfigGeneratorModel {
      * @param rule the rule to get the ConfigRule representation for
      * @return the ConfigRule representation for the given XML rule configuration
      */
-    public ConfigRule getConfigRuleforXML(XMLConfig rule) {
+    public ConfigRule getConfigRuleforXML(XMLConfig rule) throws IllegalArgumentException{
         String ruleName = rule.getName();
-        return availableRules.get(ruleName);
+        ConfigRule configRule = availableRules.get(ruleName);
+        if (configRule == null) {
+            throw new IllegalArgumentException();
+        }
+        return configRule;
     }
 
     /**
