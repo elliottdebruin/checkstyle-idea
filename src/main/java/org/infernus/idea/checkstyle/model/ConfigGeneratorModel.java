@@ -40,7 +40,7 @@ public class ConfigGeneratorModel {
      */
     public ConfigGeneratorModel(Project project) {
         CheckStyleRuleProvider provider = new CheckStyleRuleProvider();
-        this.possibleRules = new TreeMap<>(provider.getDefaultCategorizedRules());
+        this.possibleRules = new TreeMap<>(provider.getDefaultCategorizedRule());
         this.config = new XMLConfig("Checker");
         this.activeRules = new HashMap<>();
         this.xmlConfigs = new LinkedList<>();
