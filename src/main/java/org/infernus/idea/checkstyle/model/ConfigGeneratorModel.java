@@ -1,13 +1,13 @@
 package org.infernus.idea.checkstyle.model;
 
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.vfs.VirtualFile;
 import org.infernus.idea.checkstyle.util.CheckStyleRuleProvider;
 import org.infernus.idea.checkstyle.util.ConfigReader;
 import org.infernus.idea.checkstyle.util.ConfigWriter;
 import org.xml.sax.SAXException;
 
 import javax.xml.parsers.ParserConfigurationException;
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.*;
@@ -16,9 +16,6 @@ public class ConfigGeneratorModel {
     /** The current state of the configuration */
     XMLConfig config;
 
-    /** The path the the config will be saved to when it is generated */
-    private String path;
-
     /**
      * The Map<String, ConfigRule> with the String being the name of a rule
      * mapping to the corresponding ConfigRule
@@ -26,7 +23,10 @@ public class ConfigGeneratorModel {
     private Map<String, ConfigRule> activeRules;
 
     /** XMLConfig representations of all the active rules for the config */
-    private Set<XMLConfig> xmlConfigs;
+    private List<XMLConfig> xmlConfigs;
+
+    /** The state of the user's project */
+    private Project project;
 
     /**
      * A TreeMap<String, List<ConfigRule>> with names of all rule categories
@@ -40,12 +40,11 @@ public class ConfigGeneratorModel {
      */
     public ConfigGeneratorModel(Project project) {
         CheckStyleRuleProvider provider = new CheckStyleRuleProvider();
-        provider.getDefaultCategorizedRule();
-        this.possibleRules = new TreeMap<>((TreeMap<String, List<ConfigRule>>)provider.getDefaultCategorizedRule());
-        this.path = project.getBasePath() + ".idea/";
+        this.possibleRules = new TreeMap<>(provider.getDefaultCategorizedRules());
         this.config = new XMLConfig("Checker");
         this.activeRules = new HashMap<>();
-        this.xmlConfigs = new HashSet<>();
+        this.xmlConfigs = new LinkedList<>();
+        this.project = project;
     }
 
     /**
@@ -61,7 +60,7 @@ public class ConfigGeneratorModel {
         for (XMLConfig rule : xmlConfigs) {
             config.addChild(rule);
         }
-        String filepath = path + fileName + ".xml";
+        String filepath = project.getBasePath() + "/.idea/configs/" + fileName + ".xml";
         ConfigWriter.saveConfig(filepath, config);
     }
 
@@ -76,7 +75,7 @@ public class ConfigGeneratorModel {
      *         report when this error is thrown
      */
     public void importConfig(String fileName) throws ParserConfigurationException, SAXException, IOException {
-        config = ConfigReader.readConfig(path + fileName + ".xml");
+        config = ConfigReader.readConfig(project.getBasePath() + "/.idea/configs/" + fileName + ".xml");
     }
 
     /**
@@ -85,8 +84,8 @@ public class ConfigGeneratorModel {
      * @return a Collection<XMLConfig> of all the active rules in the current
      *         configuration
      */
-    public Collection<XMLConfig> getActiveRules() {
-        return new HashSet<>(xmlConfigs);
+    public List<XMLConfig> getActiveRules() {
+        return new LinkedList<>(xmlConfigs);
     }
 
     /**
@@ -129,7 +128,7 @@ public class ConfigGeneratorModel {
     public String getPreview() {
         XMLConfig preview = new XMLConfig("Checker");
         for (XMLConfig rule : xmlConfigs) {
-            config.addChild(rule);
+            preview.addChild(rule);
         }
         return ConfigWriter.xmlPreview(preview);
     }
@@ -143,10 +142,21 @@ public class ConfigGeneratorModel {
      */
     public Set<String> getConfigNames() {
         Set<String> configFileNames = new HashSet<>();
-        File[] configs = new File(path).listFiles();
-        for (File configFile : configs) {
-            if (configFile.isFile()) {
-                configFileNames.add(configFile.getName());
+        VirtualFile s = project.getBaseDir();
+        VirtualFile idea = null;
+        for (VirtualFile dir : s.getChildren()) {
+            if (dir.getName().equals(".idea")) {
+                idea = dir;
+                break;
+            }
+        }
+        if (idea != null) {
+            for (VirtualFile dir : idea.getChildren()) {
+                if (dir.getName().equals("configs")) {
+                    for (VirtualFile config : dir.getChildren()) {
+                        configFileNames.add(config.getName().replace(".xml", ""));
+                    }
+                }
             }
         }
         return configFileNames;
