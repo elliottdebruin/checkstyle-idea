@@ -1,0 +1,20 @@
+Goals from last week:
+* Finish building core View features (rule attributes, XML preview, and import config dialogs)
+* Integrate View with Controller
+* Add JavaDoc to public and protected methods
+* Begin gathering user feedback on GUI
+
+Progress over the week:
+* Finished building core View features (those mentioned above)
+* Itegrated View with Controller
+* Finished writing Controller
+* Added more JavaDoc comments (not all)
+* Began writing tests for Controller
+* Wrote Python script to generate available-rules.xml (a file that defines the
+    descriptions, types, and default values for each rule)
+* Built GUI Demo for presentation
+
+Goals for next week:
+* Finish writing Controller tests
+* Fully integrate controller with model
+* Finish adding JavaDoc comments
