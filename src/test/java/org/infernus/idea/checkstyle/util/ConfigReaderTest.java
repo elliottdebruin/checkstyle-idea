@@ -25,7 +25,7 @@ public class ConfigReaderTest {
   private static String onlyProperties = "onlyProperties.xml";
   private static String onlyModules = "onlyModule.xml";
   private static String haveEverything = "haveEverything.xml";
-/*
+
   @BeforeClass
   public static void setUpTestingFiles() throws Exception{
     File isXMLFile = new File(isNotXMLFileName);
@@ -135,7 +135,7 @@ public class ConfigReaderTest {
     haveEverythingWriter.println("  <module name=\"SuppressWarnings\">\n" +
             "        <property name=\"format\" value=\"^((?!unchecked|deprecation|rawtypes|resource).)*$\"/>\n" +
             "        <message key=\"regexp.filepath.mismatch\"\n" +
-            "               value=\"Only java files should be located in the ''src/*//*java'' folders.\"/>" +
+            "               value=\"Only java files should be located in the ''src/*/java'' folders.\"/>" +
             "    </module>");
     haveEverythingWriter.println("  <module name=\"TreeWalker\">");
     haveEverythingWriter.println("    <module name=\"AnnotationLocation\">\n" +
@@ -246,7 +246,7 @@ public class ConfigReaderTest {
         assertEquals(1, child[i].getMessages().size());
 
         assertEquals("^((?!unchecked|deprecation|rawtypes|resource).)*$", child[i].getAttribute("format"));
-        assertEquals("Only java files should be located in the ''src/*//*java'' folders.",
+        assertEquals("Only java files should be located in the ''src/*/java'' folders.",
                               child[i].getMessages().get("regexp.filepath.mismatch"));
       } else if (child[i].getName().equals("TreeWalker")) {
         assertEquals(0, child[i].getAttributeNames().length);
@@ -264,5 +264,5 @@ public class ConfigReaderTest {
         assertTrue("unexpected child config " + child[i].getName(), false);
       }
     }
-  }*/
+  }
 }
