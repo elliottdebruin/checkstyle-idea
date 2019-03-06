@@ -144,8 +144,6 @@ public class CheckAttributesEditorDialog extends ConfigGeneratorWindow {
           if (ch >= 32 && ch < 127) {
             value += ch;
           }
-          System.out.println("\n\n\n" + ch);
-          System.out.println(value + "\n\n\n");
           xmlRule.addAttribute(attr, value);
         }
 
