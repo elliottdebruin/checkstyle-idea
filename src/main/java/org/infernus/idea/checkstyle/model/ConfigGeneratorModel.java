@@ -8,6 +8,7 @@ import org.infernus.idea.checkstyle.util.ConfigWriter;
 import org.xml.sax.SAXException;
 
 import javax.xml.parsers.ParserConfigurationException;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.*;
@@ -63,6 +64,10 @@ public class ConfigGeneratorModel {
      */
     public void generateConfig(String fileName) throws IOException {
         config = generateCurrentConfig();
+        File configFolder = new File(project.getBasePath() + "/.idea/configs");
+        if (!configFolder.exists()) {
+            configFolder.mkdirs();
+        }
         String filepath = project.getBasePath() + "/.idea/configs/" + fileName + ".xml";
         ConfigWriter.saveConfig(filepath, config);
     }
