@@ -83,6 +83,7 @@ public class ConfigGeneratorModel {
      *         report when this error is thrown
      */
     public void importConfig(String fileName) throws ParserConfigurationException, SAXException, IOException {
+        xmlConfigs = new LinkedList<>();
         config = ConfigReader.readConfig(project.getBasePath() + "/.idea/configs/" + fileName + ".xml");
         for (XMLConfig check : config.getChildren()) {
             if (check.getName().equals("TreeWalker")) {
