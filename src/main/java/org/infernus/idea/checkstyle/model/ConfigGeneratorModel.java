@@ -41,7 +41,7 @@ public class ConfigGeneratorModel {
     public ConfigGeneratorModel(Project project) {
         CheckStyleRuleProvider provider = new CheckStyleRuleProvider();
         this.availableRules = new HashMap<>();
-        this.possibleRules = new TreeMap<>(provider.getDefaultCategorizedRule());
+        this.possibleRules = new TreeMap<>(provider.getDefaultCategorizedRules());
         for (String cat : possibleRules.keySet()) {
             for (ConfigRule ruleDetails : possibleRules.get(cat)) {
                 availableRules.put(ruleDetails.getRuleName(), ruleDetails);
