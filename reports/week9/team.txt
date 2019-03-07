@@ -1,0 +1,32 @@
+﻿Team Status Report Week 9
+Plans and Goals from Previous Week:
+* Build the XML configuration file generator
+*  Build the XML file reader
+*  Build an ADT to represent XML configuration files
+*  Create the base for our GUI
+   * A window that is displayed when a given button in the IDE is clicked and a
+   button to generate a blank configuration file
+
+
+Progress Report:
+   * Built RuleProvider
+   * Built PropertyMetaData
+   * Built model
+   * Connected GUI, Model, XML reader/writer, Rule Provider, Property Metadata Provider, and input validator
+
+
+Plans and Goals for the Week:
+   * Publish plugin to Intellj Marketplace
+   * Evaluate tool effectiveness with the user report according to the metrics in final report draft
+
+
+Agenda for Weekly Meeting:
+   * Questions for Manager:
+   * Should “challenge and risk” still be part of the final report
+   * What section should remain in the final report, and what should not?
+   * What is the biggest missing thing in our draft?
+   * How do we get a good grade for the project?
+   * Questions for Customer:
+   * With this tool, is the user able to build a configuration without knowing anything about the configuration structure?
+   * What part of the tool is intuitive that we should keep it?
+   * What part of the tool is hard to use and understand for first time user?
