@@ -70,6 +70,15 @@ public class ConfigGeneratorModel {
         }
         String filepath = project.getBasePath() + "/.idea/configs/" + fileName + ".xml";
         ConfigWriter.saveConfig(filepath, config);
+        VirtualFile s = project.getBaseDir();
+        VirtualFile idea = null;
+        for (VirtualFile dir : s.getChildren()) {
+            if (dir.getName().equals(".idea")) {
+                idea = dir;
+                idea.refresh(false,true);
+                break;
+            }
+        }
     }
 
     /**
