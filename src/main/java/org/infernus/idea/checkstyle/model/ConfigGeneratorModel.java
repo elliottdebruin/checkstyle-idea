@@ -26,6 +26,8 @@ public class ConfigGeneratorModel {
     /** XMLConfig representations of all the active rules for the config */
     private List<XMLConfig> xmlConfigs;
 
+    private CheckStyleRuleProvider provider;
+
     /** The state of the user's project */
     private Project project;
 
@@ -40,7 +42,7 @@ public class ConfigGeneratorModel {
      * path to the file, and set of active rules
      */
     public ConfigGeneratorModel(Project project) {
-        CheckStyleRuleProvider provider = new CheckStyleRuleProvider();
+        this.provider = new CheckStyleRuleProvider();
         this.availableRules = new HashMap<>();
         this.possibleRules = new TreeMap<>(provider.getDefaultCategorizedRules());
         for (String cat : possibleRules.keySet()) {
@@ -230,5 +232,9 @@ public class ConfigGeneratorModel {
      */
     public void removeActiveRule(XMLConfig rule) {
         xmlConfigs.remove(rule);
+    }
+
+    public CheckStyleRuleProvider getRuleProvider() {
+        return this.provider;
     }
 }
