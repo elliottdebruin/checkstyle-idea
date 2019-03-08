@@ -110,7 +110,7 @@ Once selected the window below be displayed:
 
 ![GUI mockup](images/ConfigEditor.png)
 
-#### Importing
+### Importing
 In the top left of the window there is an **Import** button, which when clicked will allow the user to import an existing 
 CheckStyle configuration file to the Configuration Generator. When importing you will see the window below:
 
@@ -123,7 +123,7 @@ no files to import and a directory named _config_ will be created when you gener
 Once you select a configuration to import, all the rules in the configuration will be added to the active rules section
 of the window. 
 
-#### Active Rules
+### Active Rules
 
 The **Active Rules** section of the Configuration editor displays all of the rules you currently
 have in your configuration. Selecting a rule in the **Active Rules** section will display and allow you
@@ -131,7 +131,7 @@ to edit all of its attribution values. Note, the Configuration Editor supports t
 do not need to worry about inputting an invalid type for attributes.
 
 
-#### Adding Rules
+### Adding Rules
 
 There are two ways to find rules through the Configuration Editor.
 
@@ -148,7 +148,7 @@ a areas to file in values for all possible attributes of the rule. Note assignin
 To add a rule to your active rules press the **OK** button in the window that is displayed after selecting a rule.
 Once the rule is added it will be displayed in the **Active Rules** section.
 
-#### Removing Rules
+### Removing Rules
 
 To remove a single rule that is currently in your configuration select the rule from the **Active Rules** section.
 The window with the rule's attributes will be displayed with a **Delete** button in the bottom right.
@@ -157,12 +157,12 @@ Clicking this button will remove the rule from the configuration and **Active Ru
 To remove all the rules in the configuration click the **Clear** button in the top right of the Configuration Editor
 window.
 
-#### Previewing the Configuration File
+### Previewing the Configuration File
 
 To see a preview of what the XML for your current configuration will look like click the **preview** button 
 in the bottom right of the Configuration Editor and a new window with the preview will be displayed.
 
-#### Generating the Configuration
+### Generating the Configuration
 
 Once you have added all of your desired rules to the **Active Rules** section you need to give a name to your 
 configuration in the bottom left text box of the Configuration Editor.
