@@ -16,27 +16,27 @@ We require IDEA to be running on JDK 8. AFAIK this is the default as of IDEA 201
 
 ## Table of Contents
 * [Use](#use)
-* [Configuration](configuration)
-  * [Configuration Files](configuration-files)
-  * [Eclipse-CS Variable Support](eclipse-cs-variable-support)
-  * [Third Party Checks](third-party-checks)
-  * [Copy libraries from project directory](copy-libraries-from-project-directory)
-* [**Generating Configuration Files (ADDED BY FLINT TEAM)**](generating-configuration-files)
-  * [Importing](importing)
-  * [Active Rules](active-rules)
-  * [Adding Rules](adding-rules)
-  * [Removing Rules](removing-rules)
-  * [Previewing the Configuration File](previewing-the-configuration-file)
-  * [Generating the Configuration](generating-the-configuration)
-* [Troubleshooting](troubleshooting)
-* [Notable Extensions](notabale-extensions)
-* [Development](development)
-* [FAQ](faq)
-* [Limitations](limitations)
-* [Feedback](feedback)
-* [Acknowledgements](acknowledgements)
-* [Licence](licence)
-* [Version History](version-history)
+* [Configuration](#configuration)
+  * [Configuration Files](#configuration-files)
+  * [Eclipse-CS Variable Support](#eclipse-cs-variable-support)
+  * [Third Party Checks](#third-party-checks)
+  * [Copy libraries from project directory](#copy-libraries-from-project-directory)
+* [**Generating Configuration Files (ADDED BY FLINT TEAM)**](#generating-configuration-files)
+  * [Importing](#importing)
+  * [Active Rules](#active-rules)
+  * [Adding Rules](#adding-rules)
+  * [Removing Rules](#removing-rules)
+  * [Previewing the Configuration File](#previewing-the-configuration-file)
+  * [Generating the Configuration](#generating-the-configuration)
+* [Troubleshooting](#troubleshooting)
+* [Notable Extensions](#notabale-extensions)
+* [Development](#development)
+* [FAQ](#faq)
+* [Limitations](#limitations)
+* [Feedback](#feedback)
+* [Acknowledgements](#acknowledgements)
+* [Licence](#licence)
+* [Version History](#version-history)
 
 
 ## Use
@@ -127,7 +127,8 @@ of the window.
 
 The **Active Rules** section of the Configuration editor displays all of the rules you currently
 have in your configuration. Selecting a rule in the **Active Rules** section will display and allow you
-to edit all of its attribution values.
+to edit all of its attribution values. Note, the Configuration Editor supports type validation so you 
+do not need to worry about inputting an invalid type for attributes.
 
 
 #### Adding Rules
