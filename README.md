@@ -135,12 +135,13 @@ do not need to worry about inputting an invalid type for attributes.
 
 There are two ways to find rules through the Configuration Editor.
 
-The first way is to search for the rule by name. To the right of the 'Import' button we have a search bar that allows 
-you to search CheckStyles rule database for a specific rule, which will be displayed in the section below the search bar.
-As you can see in the example the search query is "default" and all rules that contain the query are displayed. 
-
-The second way is to search for rules by category. On the left side of the window there is a list of categories. Checkstyle has a large set of premade rules that are divided into categories 
+The first way is to search for rules by category. On the left side of the window there is a list of categories. Checkstyle has a large set of premade rules that are divided into categories 
 and each category is displayed on the left. Clicking on a category will display all the rules contained in that category. 
+
+The second way is to search for the rule by name. To the right of the 'Import' button we have a search bar that allows 
+you to search CheckStyles rule database for specific rules that have names containing the search query, which will be displayed in the section below the search bar.
+Currently using the search bar will display all matching rules within the currently selected category.
+As you can see in the example the search query is "default" and all rules in the *Coding* category that contain the query are displayed. 
 
 Clicking on a rule will display another small window to that will give you a description of the rule and 
 a areas to file in values for all possible attributes of the rule. Note assigning values for the attributes is optional.
