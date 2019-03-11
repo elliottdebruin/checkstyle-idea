@@ -1,0 +1,7 @@
+Task 1 Method,Task 1 Time,Task 2 Method,Task 2 Time,Task 3 Method,Task 3 Time
+XML,10,GUI,10,GUI,5.2
+GUI,1.5,XML,7.5,GUI,1
+GUI,1,XML,10,GUI,3
+XML,10,GUI,10,GUI,3
+GUI,2,GUI,10,GUI,2
+GUI,10,GUI,3,XML,1
