@@ -1,8 +1,24 @@
-import os
 import os.path as path
 import csv
+import requests
 import matplotlib.pyplot as plt
 import numpy as np
+
+def update_responses_file(file_path):
+  '''
+  Gets the most recent content in the Google Sheet containing the feedback
+  form's responses and writes it to "file_path"
+  '''
+  # The id of the google sheet that holds our feedback form's responses
+  sheet_id = '1UbKDC5v8Um6HFpE1IxNxyeKPwB1DkcMKANuheFg4p3w'
+  url = 'https://docs.google.com/spreadsheets/d/' + sheet_id + '/export?format=csv'
+  with open(file_path, 'w') as out:
+    content = str(requests.get(url).content)[2:-1]
+    content = (content
+      .replace('\\r', '')
+      .replace('\\n', '\n')
+      .replace('\\\'', '\''))
+    out.write(content)
 
 def list_for_index_and_method(rows, i, method):
   '''
@@ -10,7 +26,7 @@ def list_for_index_and_method(rows, i, method):
   "i" by way of "method".
   '''
   assert i % 2 == 0
-  return [float(row[i + 1]) for row in rows[1:] if row[i] == method]
+  return tuple(float(row[i + 1]) for row in rows[1:] if row[i] == method)
 
 def time_to_complete_dict(rows):
   '''
@@ -37,8 +53,8 @@ def plot_time_to_complete(ttc_dict, out_dir='.'):
   '''
   # Data to plot
   n_groups = 3
-  gui_series = [sum(times) / len(times) for times in ttc_dict['GUI'].values()]
-  xml_series = [sum(times) / len(times) for times in ttc_dict['XML'].values()]
+  gui_series = tuple(sum(times) / len(times) for times in ttc_dict['GUI'].values())
+  xml_series = tuple(sum(times) / len(times) for times in ttc_dict['XML'].values())
 
   # Create plot
   index = np.arange(n_groups)
@@ -61,29 +77,48 @@ def column_dict(rows):
   values in said column.
   '''
   return {
-    header: [row[i] for row in rows[1:]]
+    header: tuple(row[i] for row in rows[1:])
     for i, header in enumerate(rows[0])
   }
 
-def pie_chart_for(series, title, exploded_label='I don\'t know', out_dir='.', file_name=''):
+def pie_chart_for(
+  series,
+  title,
+  axis_label='',
+  exploded_label='GUI',
+  out_dir='.',
+  file_name=''
+):
   '''
   Saves a pie chart of "series" with a title of "title" in a file named
   "file_name" in directory "out_dir"
   '''
-  labels = list(set(series))
-  sizes = [series.count(label) for label in labels]
+  labels = tuple(set(series))
+  sizes = tuple(series.count(label) for label in labels)
   index = next(i for i, label in enumerate(labels) if label == exploded_label)
-  explode = [0.1 if i == index else 0 for i, label in enumerate(labels)]
+  explode = tuple(0.1 if i == index else 0 for i, label in enumerate(labels))
 
   plt.pie(sizes, explode=explode, labels=labels, autopct='%1.1f%%')
   plt.title(title)
+  if len(axis_label) > 0:
+    plt.xlabel(axis_label)
   plt.savefig(path.join(out_dir, file_name + '.jpg'))
   plt.cla()
+
+def get_gui_preference_series(columns):
+  gui_votes = columns['How hard/easy it is to create a linter configuration with the GUI?']
+  xml_votes = columns['How hard/easy it is to create a linter configuration with XML?']
+  assert len(gui_votes) == len(xml_votes)
+
+  return tuple('GUI'  if int(gui_votes[i]) > int(xml_votes[i]) else 'XML' for i in range(len(gui_votes)))
 
 # File names
 time_to_complete_file_name = 'time_to_complete.csv'
 feedback_responses_file_name = 'feedback_responses.csv'
 directory, _ = path.split(__file__)
+
+# Get most recent CSV from form responses
+update_responses_file(path.join(directory, feedback_responses_file_name))
 
 # Lines of CSV
 with open(directory + '/' + time_to_complete_file_name) as ttc_file:
@@ -101,6 +136,7 @@ with open(directory + '/' + feedback_responses_file_name) as fr_file:
     pie_chart_for(
       fr_dict[question],
       question,
+      exploded_label='I don\'t know',
       out_dir=path.join(directory, 'figures'),
       file_name='parent_module_' + str(i + 1)
     )
@@ -112,7 +148,19 @@ with open(directory + '/' + feedback_responses_file_name) as fr_file:
     pie_chart_for(
       fr_dict[question],
       question,
-      exploded_label='GUI',
       out_dir=path.join(directory, 'figures'),
       file_name='preferred_method_' + str(i + 1)
     )
+  series = get_gui_preference_series(fr_dict)
+  pie_chart_for(
+    series,
+    'Which method is easier overall for creating a linter configuration?',
+    axis_label=(
+      'Number who preferred GUI: '
+      + str(series.count('GUI'))
+      + ', Number who preferred XML: '
+      + str(series.count('XML'))
+    ),
+    out_dir=path.join(directory, 'figures'),
+    file_name='preferred_method_overall'
+  )
