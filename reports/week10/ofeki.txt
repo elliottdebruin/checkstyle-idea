@@ -1,0 +1,18 @@
+Goals from last week:
+* Finish writing Controller tests
+* Fully integrate controller with model
+* Finish adding JavaDoc comments
+
+Progress over the week:
+* Finished writing Controller tests
+* Fully integrated controller with model
+* Finished adding JavaDoc comments
+* Opened a Pull Request to the original CheckStyle-IDEA repository
+* Released plugin to IntelliJ plugin marketplace
+* Fixed some bugs and display issues and released an update to the plugin
+* Conducted user testing
+* Built script to generate figures/graphics from user data
+
+Goals for next week:
+* Finish writing final project report
+* Prepare presentation
