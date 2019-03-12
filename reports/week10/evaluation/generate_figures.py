@@ -148,11 +148,11 @@ def main():
   with open(directory + '/' + feedback_responses_file_name) as fr_file:
     fr = list(csv.reader(fr_file))
     fr_dict = column_dict(fr)
-    for i, question in enumerate([
+    for i, question in enumerate((
       'What is the parent modules of "LineLength"?',
       'What is the parent modules of "AvoidStarImport"?',
       'What is the parent modules of "Indentation"?'
-    ]):
+    )):
       pie_chart_for(
         fr_dict[question],
         question,
@@ -160,16 +160,27 @@ def main():
         out_dir=path.join(directory, 'figures'),
         file_name='parent_module_' + str(i + 1)
       )
-    for i, question in enumerate([
+    for i, question in enumerate((
       'In Task 1, would you rather do it with the GUI tool  or the XML?',
       'In Task 2, would you rather do it with the GUI tool  or the XML?',
       'In Task 3, would you rather do it with the GUI tool  or the XML?'
-    ]):
+    )):
       pie_chart_for(
         fr_dict[question],
         question,
         out_dir=path.join(directory, 'figures'),
         file_name='preferred_method_' + str(i + 1)
+      )
+    for i, question in enumerate((
+      'Have you setup and/or used a linter before this user testing?',
+      'Did you know how to write XML before this user demo?'
+    )):
+      pie_chart_for(
+        fr_dict[question],
+        question,
+        exploded_label='Yes',
+        out_dir=path.join(directory, 'figures'),
+        file_name='past_experience_' + str(i + 1)
       )
     series = get_gui_preference_series(fr_dict)
     pie_chart_for(
