@@ -1,0 +1,9 @@
+Goal:
+	Connect all MVC modules
+
+Progress:
+	Published the plugin on intellj Marketplace
+  Established user testing.
+
+Next Goal:
+	User testing
