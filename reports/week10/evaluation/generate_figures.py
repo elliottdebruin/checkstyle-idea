@@ -112,55 +112,87 @@ def get_gui_preference_series(columns):
 
   return tuple('GUI'  if int(gui_votes[i]) > int(xml_votes[i]) else 'XML' for i in range(len(gui_votes)))
 
-# File names
-time_to_complete_file_name = 'time_to_complete.csv'
-feedback_responses_file_name = 'feedback_responses.csv'
-directory, _ = path.split(__file__)
+def method_difficulty_bar_chart(
+  answers,
+  title='',
+  xlabel='Difficulty (1 low, 5 high)',
+  ylabel='Number of votes',
+  out_dir='.',
+  file_name=''
+):
+  labels = tuple(range(1, 6))
+  series = tuple(answers.count(str(label)) for label in labels)
+  
+  plt.bar(labels, series)
+  plt.xlabel(xlabel)
+  plt.ylabel(ylabel)
+  plt.title(title)
 
-# Get most recent CSV from form responses
-update_responses_file(path.join(directory, feedback_responses_file_name))
+  plt.savefig(path.join(out_dir, file_name + '.jpg'))
+  plt.cla()
 
-# Lines of CSV
-with open(directory + '/' + time_to_complete_file_name) as ttc_file:
-  ttc = list(csv.reader(ttc_file))
-  plot_time_to_complete(time_to_complete_dict(ttc), path.join(directory, 'figures'))
+def main():
+  # File names
+  time_to_complete_file_name = 'time_to_complete.csv'
+  feedback_responses_file_name = 'feedback_responses.csv'
+  directory, _ = path.split(__file__)
 
-with open(directory + '/' + feedback_responses_file_name) as fr_file:
-  fr = list(csv.reader(fr_file))
-  fr_dict = column_dict(fr)
-  for i, question in enumerate([
-    'What is the parent modules of "LineLength"?',
-    'What is the parent modules of "AvoidStarImport"?',
-    'What is the parent modules of "Indentation"?'
-  ]):
+  # Get most recent CSV from form responses
+  update_responses_file(path.join(directory, feedback_responses_file_name))
+
+  # Lines of CSV
+  with open(directory + '/' + time_to_complete_file_name) as ttc_file:
+    ttc = list(csv.reader(ttc_file))
+    plot_time_to_complete(time_to_complete_dict(ttc), path.join(directory, 'figures'))
+
+  with open(directory + '/' + feedback_responses_file_name) as fr_file:
+    fr = list(csv.reader(fr_file))
+    fr_dict = column_dict(fr)
+    for i, question in enumerate([
+      'What is the parent modules of "LineLength"?',
+      'What is the parent modules of "AvoidStarImport"?',
+      'What is the parent modules of "Indentation"?'
+    ]):
+      pie_chart_for(
+        fr_dict[question],
+        question,
+        exploded_label='I don\'t know',
+        out_dir=path.join(directory, 'figures'),
+        file_name='parent_module_' + str(i + 1)
+      )
+    for i, question in enumerate([
+      'In Task 1, would you rather do it with the GUI tool  or the XML?',
+      'In Task 2, would you rather do it with the GUI tool  or the XML?',
+      'In Task 3, would you rather do it with the GUI tool  or the XML?'
+    ]):
+      pie_chart_for(
+        fr_dict[question],
+        question,
+        out_dir=path.join(directory, 'figures'),
+        file_name='preferred_method_' + str(i + 1)
+      )
+    series = get_gui_preference_series(fr_dict)
     pie_chart_for(
-      fr_dict[question],
-      question,
-      exploded_label='I don\'t know',
+      series,
+      'Which method is easier overall for creating a linter configuration?',
+      axis_label=(
+        'Number who preferred GUI: '
+        + str(series.count('GUI'))
+        + ', Number who preferred XML: '
+        + str(series.count('XML'))
+      ),
       out_dir=path.join(directory, 'figures'),
-      file_name='parent_module_' + str(i + 1)
+      file_name='preferred_method_overall'
     )
-  for i, question in enumerate([
-    'In Task 1, would you rather do it with the GUI tool  or the XML?',
-    'In Task 2, would you rather do it with the GUI tool  or the XML?',
-    'In Task 3, would you rather do it with the GUI tool  or the XML?'
-  ]):
-    pie_chart_for(
-      fr_dict[question],
-      question,
-      out_dir=path.join(directory, 'figures'),
-      file_name='preferred_method_' + str(i + 1)
-    )
-  series = get_gui_preference_series(fr_dict)
-  pie_chart_for(
-    series,
-    'Which method is easier overall for creating a linter configuration?',
-    axis_label=(
-      'Number who preferred GUI: '
-      + str(series.count('GUI'))
-      + ', Number who preferred XML: '
-      + str(series.count('XML'))
-    ),
-    out_dir=path.join(directory, 'figures'),
-    file_name='preferred_method_overall'
-  )
+    for question in (
+      'How hard/easy it is to create a linter configuration with the GUI?',
+      'How hard/easy it is to create a linter configuration with XML?'
+    ):
+      method_difficulty_bar_chart(
+        fr_dict[question],
+        question,
+        out_dir=path.join(directory, 'figures'),
+        file_name='difficulty_' + question[-4:-1].lower()
+      )
+
+main()
