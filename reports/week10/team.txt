@@ -1,0 +1,33 @@
+﻿Team Status Report Week 10
+Plans and Goals from Previous Week:
+* Publish plugin to Intellij Marketplace
+* Evaluate tool effectiveness with the user report according to the metrics in final report draft
+
+
+Progress Report:
+* We published our plugin to the Intellij Marketplace
+* Finished polishing up all documentation and tests in the repository
+* Conducted user testing
+* Evaluated the effectiveness of our tool using the data acquired through user testing
+* Improved the Configuration Editor based on suggestions from users
+   * Added global searching
+   * Added Active Rules searching
+   * Added notification on generation
+   * Made the delete rule button more distinct
+* Finished writing and improving our final report
+* Created a pull request for our tool on the original CheckStyle-IDEA repository
+
+
+Plans and Goals for the Week:
+* Create slides for the final presentation
+* Address the feedback from the pull request if the owner reviews it this week
+
+
+Agenda for Weekly Meeting:
+* Questions for Manager:
+   * For the final presentation should we present assuming no one knows anything about our tool?
+   * Which parts of our project are more important to go into depth about while presenting?
+   * How much of the final report should be included in the presentation?
+* Questions for Customer:
+   * Now that you have used the tool, is it something you could see yourself using for your projects?
+   * Are there any features you feel are lacking from the Configuration Editor at the moment?
